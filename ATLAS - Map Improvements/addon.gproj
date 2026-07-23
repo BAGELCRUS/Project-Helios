@@ -1,0 +1,22 @@
+GameProject {
+ ID "ATLAS"
+ GUID "69ED70B9F9C58A4E"
+ TITLE "ATLAS - Map Improvements"
+ Dependencies {
+  "58D0FB3206B6F859"
+ }
+ Configurations {
+  GameProjectConfig PC {
+  }
+  GameProjectConfig XBOX_ONE {
+  }
+  GameProjectConfig XBOX_SERIES {
+  }
+  GameProjectConfig PS4 {
+  }
+  GameProjectConfig PS5 {
+  }
+  GameProjectConfig HEADLESS {
+  }
+ }
+}

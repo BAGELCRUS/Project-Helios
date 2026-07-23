@@ -1,0 +1,22 @@
+GameProject {
+ ID "APOLLO"
+ GUID "69ED7323F74C0DD2"
+ TITLE "APOLLO - Medical overhaul"
+ Dependencies {
+  "58D0FB3206B6F859"
+ }
+ Configurations {
+  GameProjectConfig PC {
+  }
+  GameProjectConfig XBOX_ONE {
+  }
+  GameProjectConfig XBOX_SERIES {
+  }
+  GameProjectConfig PS4 {
+  }
+  GameProjectConfig PS5 {
+  }
+  GameProjectConfig HEADLESS {
+  }
+ }
+}
