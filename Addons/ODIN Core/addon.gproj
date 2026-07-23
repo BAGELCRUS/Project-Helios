@@ -1,0 +1,8 @@
+GameProject {
+ ID "ODINCore"
+ GUID "69EE5AD67E120C28"
+ TITLE "ODIN Core"
+ Dependencies {
+  "58D0FB3206B6F859"
+ }
+}
