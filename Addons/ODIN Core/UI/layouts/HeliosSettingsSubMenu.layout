@@ -1,0 +1,22 @@
+VerticalLayoutWidgetClass {
+ Name "rootFrame"
+ Slot LayoutSlot "{69F2594A541A18A9}" {
+  Padding 0 10 0 10
+ }
+ components {
+  ODIN_HeliosSettingsSubMenu "{69F2594BF68F67B4}" {
+  }
+ }
+ {
+  ButtonWidgetClass "{69F2594BDF6EACAF}" : "{4B5AE6E64037FFB4}UI/layouts/WidgetLibrary/ComboBox/WLib_ComboBox.layout" {
+   Name "ModSelectorDropdown"
+   Slot LayoutSlot "{69F2594A9DFFAD17}" {
+   }
+  }
+  FrameWidgetClass "{69F2594BC06CB4CE}" {
+   Name "SettingsContainer"
+   Slot LayoutSlot "{69F2594A9DFFAD07}" {
+   }
+  }
+ }
+}

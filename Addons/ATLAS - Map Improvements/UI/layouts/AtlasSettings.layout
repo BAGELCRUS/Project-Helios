@@ -1,0 +1,52 @@
+VerticalLayoutWidgetClass {
+ Name "rootFrame"
+ Slot LayoutSlot "{69F2594A3B6CEBC8}" {
+ }
+ "Fill Origin" Center
+ {
+  ButtonWidgetClass "{69F2594B55B0F715}" : "{C9DF0E6590F6C388}UI/layouts/WidgetLibrary/SpinBox/WLib_SpinBox.layout" {
+   Name "SpinBox0"
+   Slot LayoutSlot "{69F2594A6AFD9E79}" {
+   }
+   components {
+    SCR_SpinBoxComponent "{5472C6CBC0640458}" {
+     m_aElementNames {
+      "On" "Off"
+     }
+    }
+   }
+   {
+    SizeLayoutWidgetClass "{55367D829C978ED4}" {
+     Prefab "{55367D829C978ED4}"
+     {
+      OverlayWidgetClass "{55367D8E531FD623}" {
+       Prefab "{55367D8E531FD623}"
+       {
+        HorizontalLayoutWidgetClass "{55367D8E4592BC6E}" {
+         Prefab "{55367D8E4592BC6E}"
+         {
+          HorizontalLayoutWidgetClass "{55367D828911C318}" {
+           Prefab "{55367D828911C318}"
+           {
+            VerticalLayoutWidgetClass "{55367D82D7AA2C56}" {
+             Prefab "{55367D82D7AA2C56}"
+             {
+              RichTextWidgetClass "{55367D82CFCF3406}" {
+               Prefab "{55367D82CFCF3406}"
+               Slot LayoutSlot "{55367D82CFCF3437}" {
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}
