@@ -1,0 +1,23 @@
+FrameWidgetClass {
+ {
+  VerticalLayoutWidgetClass "{5D56BA46E7717DBF}" {
+   Prefab "{5D56BA46E7717DBF}"
+   {
+    HorizontalLayoutWidgetClass "{627C693E4DB046B0}" {
+     Prefab "{627C693E4DB046B0}"
+     {
+      TextWidgetClass "{5D56BA46CC7AEBEB}" {
+       Prefab "{5D56BA46CC7AEBEB}"
+       Name "MarkerAuthor"
+       Slot LayoutSlot "{5D56BA46CC7AE802}" {
+        HorizontalAlign 0
+        VerticalAlign 1
+        Padding 2 0 2 0
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}
