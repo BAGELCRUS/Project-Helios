@@ -1,0 +1,22 @@
+GameProject {
+ ID "ATHENA"
+ GUID "69FB32E48756F0A4"
+ TITLE "ATHENA - Game Master overhaul"
+ Dependencies {
+  "69EE5AD67E120C28" "58D0FB3206B6F859"
+ }
+ Configurations {
+  GameProjectConfig PC {
+  }
+  GameProjectConfig XBOX_ONE {
+  }
+  GameProjectConfig XBOX_SERIES {
+  }
+  GameProjectConfig PS4 {
+  }
+  GameProjectConfig PS5 {
+  }
+  GameProjectConfig HEADLESS {
+  }
+ }
+}

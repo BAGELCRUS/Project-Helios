@@ -1,0 +1,22 @@
+HDREffect {
+ VisiblePercentWhite 5
+ VisiblePercentBlack 99
+ SpeedDarkToBright 20
+ SpeedBrightToDark 20
+ FilmicShoulderStrength 2
+ FilmicLinearStrength 2
+ FilmicLinearAngle 2
+ FilmicToeStrength 0.1
+ FilmicToeNumerator 0.75
+ FilmicToeDenumerator 7.1
+ FilmicExposureBias 7.05
+ FilmicWhitePoint 0.1
+ BloomUseThreshold 1
+ BloomThreshold 0.3
+ BloomSteepness 2.5
+ BloomDownsampleHalfRes 1
+ Saturation 0
+ ColorizationColor 0.071 0.561 0.192 1
+ DesaturationWeights 1.5 1.5 1.5 0
+ LensFlaresEnabled 1
+}

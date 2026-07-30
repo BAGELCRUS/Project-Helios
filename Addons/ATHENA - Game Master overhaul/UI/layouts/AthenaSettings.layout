@@ -1,0 +1,56 @@
+VerticalLayoutWidgetClass {
+ Name "rootFrame"
+ Slot LayoutSlot "{69FB32E4B1C2D3E4}" {
+ }
+ "Fill Origin" Center
+ components {
+  ATH_AthenaSettingsSubMenu "{69FB32E4C1D2E3F4}" {
+  }
+ }
+ {
+  ButtonWidgetClass "{69FB32E4D1E2F304}" : "{C9DF0E6590F6C388}UI/layouts/WidgetLibrary/SpinBox/WLib_SpinBox.layout" {
+   Name "NVColorSpinBox"
+   Slot LayoutSlot "{69FB32E4E1F20314}" {
+   }
+   components {
+    SCR_SpinBoxComponent "{5472C6CBC0640458}" {
+     m_aElementNames {
+      "Green (G)" "White Phosphorus (WP)"
+     }
+    }
+   }
+   {
+    SizeLayoutWidgetClass "{55367D829C978ED4}" {
+     Prefab "{55367D829C978ED4}"
+     {
+      OverlayWidgetClass "{55367D8E531FD623}" {
+       Prefab "{55367D8E531FD623}"
+       {
+        HorizontalLayoutWidgetClass "{55367D8E4592BC6E}" {
+         Prefab "{55367D8E4592BC6E}"
+         {
+          HorizontalLayoutWidgetClass "{55367D828911C318}" {
+           Prefab "{55367D828911C318}"
+           {
+            VerticalLayoutWidgetClass "{55367D82D7AA2C56}" {
+             Prefab "{55367D82D7AA2C56}"
+             {
+              RichTextWidgetClass "{55367D82CFCF3406}" {
+               Prefab "{55367D82CFCF3406}"
+               Slot LayoutSlot "{55367D82CFCF3437}" {
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------------------------
 //! ODIN Core - Centralized Settings Manager
-//! Allows child mods (ATLAS, APOLLO, IRIS) to register their settings UI dynamically.
+//! Allows child mods (ATLAS, APOLLO, IRIS, ATHENA) to register their settings UI dynamically.
 class ODIN_SettingsManager
 {
 	protected static ref ODIN_SettingsManager s_Instance;

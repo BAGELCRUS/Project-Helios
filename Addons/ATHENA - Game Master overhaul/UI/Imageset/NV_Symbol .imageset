@@ -1,0 +1,17 @@
+ImageSetClass {
+ RefSize 520 520
+ Textures {
+  ImageSetTextureClass "{69FB6CAA9AAB32B7}" {
+   screenSize FHD
+   size 520 520
+   path "{0AA599DF65BE0424}UI/Imageset/NV_Symbol -100_atlas.edds"
+  }
+ }
+ Images {
+  ImageSetDefClass NV {
+   Pos 2 2
+   Size 512 512
+   Flags 0 0
+  }
+ }
+}
