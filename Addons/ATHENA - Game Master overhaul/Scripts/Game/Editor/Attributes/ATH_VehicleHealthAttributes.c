@@ -3,7 +3,10 @@ class ATH_VehicleOverallHealthAttribute : SCR_BaseEditorAttribute
 {
 	override SCR_BaseEditorAttributeVar ReadVariable(Managed item, SCR_AttributesManagerEditorComponent manager)
 	{
-		IEntity entity = IEntity.Cast(item);
+		SCR_EditableEntityComponent editableEntity = SCR_EditableEntityComponent.Cast(item);
+		if (!editableEntity) return null;
+		
+		IEntity entity = editableEntity.GetOwner();
 		if (!entity) return null;
 		
 		SCR_VehicleDamageManagerComponent dmgMgr = SCR_VehicleDamageManagerComponent.Cast(entity.FindComponent(SCR_VehicleDamageManagerComponent));
@@ -16,7 +19,10 @@ class ATH_VehicleOverallHealthAttribute : SCR_BaseEditorAttribute
 	{
 		if (!var) return;
 		
-		IEntity entity = IEntity.Cast(item);
+		SCR_EditableEntityComponent editableEntity = SCR_EditableEntityComponent.Cast(item);
+		if (!editableEntity) return;
+		
+		IEntity entity = editableEntity.GetOwner();
 		if (!entity) return;
 		
 		SCR_VehicleDamageManagerComponent dmgMgr = SCR_VehicleDamageManagerComponent.Cast(entity.FindComponent(SCR_VehicleDamageManagerComponent));
@@ -29,8 +35,13 @@ class ATH_VehicleOverallHealthAttribute : SCR_BaseEditorAttribute
 // Base class for component health attributes
 class ATH_VehicleComponentHealthAttributeBase : SCR_BaseEditorAttribute
 {
-	protected float GetHitzonesHealthScaled(IEntity entity, array<string> hitzoneNames)
+	protected float GetHitzonesHealthScaled(Managed item, array<string> hitzoneNames)
 	{
+		SCR_EditableEntityComponent editableEntity = SCR_EditableEntityComponent.Cast(item);
+		if (!editableEntity) return 1.0;
+		IEntity entity = editableEntity.GetOwner();
+		if (!entity) return 1.0;
+		
 		SCR_VehicleDamageManagerComponent dmgMgr = SCR_VehicleDamageManagerComponent.Cast(entity.FindComponent(SCR_VehicleDamageManagerComponent));
 		if (!dmgMgr) return 1.0;
 		
@@ -51,8 +62,13 @@ class ATH_VehicleComponentHealthAttributeBase : SCR_BaseEditorAttribute
 		return totalHealth / totalMax;
 	}
 	
-	protected void SetHitzonesHealthScaled(IEntity entity, array<string> hitzoneNames, float scale)
+	protected void SetHitzonesHealthScaled(Managed item, array<string> hitzoneNames, float scale)
 	{
+		SCR_EditableEntityComponent editableEntity = SCR_EditableEntityComponent.Cast(item);
+		if (!editableEntity) return;
+		IEntity entity = editableEntity.GetOwner();
+		if (!entity) return;
+		
 		SCR_VehicleDamageManagerComponent dmgMgr = SCR_VehicleDamageManagerComponent.Cast(entity.FindComponent(SCR_VehicleDamageManagerComponent));
 		if (!dmgMgr) return;
 		
@@ -72,12 +88,12 @@ class ATH_VehicleEngineHealthAttribute : ATH_VehicleComponentHealthAttributeBase
 {
 	override SCR_BaseEditorAttributeVar ReadVariable(Managed item, SCR_AttributesManagerEditorComponent manager)
 	{
-		return SCR_BaseEditorAttributeVar.CreateFloat(GetHitzonesHealthScaled(IEntity.Cast(item), {"Engine"}));
+		return SCR_BaseEditorAttributeVar.CreateFloat(GetHitzonesHealthScaled(item, {"Engine"}));
 	}
 	
 	override void WriteVariable(Managed item, SCR_BaseEditorAttributeVar var, SCR_AttributesManagerEditorComponent manager, int playerID)
 	{
-		if (var) SetHitzonesHealthScaled(IEntity.Cast(item), {"Engine"}, var.GetFloat());
+		if (var) SetHitzonesHealthScaled(item, {"Engine"}, var.GetFloat());
 	}
 }
 
@@ -87,7 +103,7 @@ class ATH_VehicleWheelsHealthAttribute : ATH_VehicleComponentHealthAttributeBase
 	override SCR_BaseEditorAttributeVar ReadVariable(Managed item, SCR_AttributesManagerEditorComponent manager)
 	{
 		// Common wheel names in Reforger
-		return SCR_BaseEditorAttributeVar.CreateFloat(GetHitzonesHealthScaled(IEntity.Cast(item), {
+		return SCR_BaseEditorAttributeVar.CreateFloat(GetHitzonesHealthScaled(item, {
 			"Wheel_L01", "Wheel_R01", "Wheel_L02", "Wheel_R02", 
 			"Wheel_L03", "Wheel_R03", "Wheel_L04", "Wheel_R04"
 		}));
@@ -95,7 +111,7 @@ class ATH_VehicleWheelsHealthAttribute : ATH_VehicleComponentHealthAttributeBase
 	
 	override void WriteVariable(Managed item, SCR_BaseEditorAttributeVar var, SCR_AttributesManagerEditorComponent manager, int playerID)
 	{
-		if (var) SetHitzonesHealthScaled(IEntity.Cast(item), {
+		if (var) SetHitzonesHealthScaled(item, {
 			"Wheel_L01", "Wheel_R01", "Wheel_L02", "Wheel_R02", 
 			"Wheel_L03", "Wheel_R03", "Wheel_L04", "Wheel_R04"
 		}, var.GetFloat());
@@ -107,12 +123,12 @@ class ATH_VehicleRotorHealthAttribute : ATH_VehicleComponentHealthAttributeBase
 {
 	override SCR_BaseEditorAttributeVar ReadVariable(Managed item, SCR_AttributesManagerEditorComponent manager)
 	{
-		return SCR_BaseEditorAttributeVar.CreateFloat(GetHitzonesHealthScaled(IEntity.Cast(item), {"MainRotor", "TailRotor"}));
+		return SCR_BaseEditorAttributeVar.CreateFloat(GetHitzonesHealthScaled(item, {"MainRotor", "TailRotor"}));
 	}
 	
 	override void WriteVariable(Managed item, SCR_BaseEditorAttributeVar var, SCR_AttributesManagerEditorComponent manager, int playerID)
 	{
-		if (var) SetHitzonesHealthScaled(IEntity.Cast(item), {"MainRotor", "TailRotor"}, var.GetFloat());
+		if (var) SetHitzonesHealthScaled(item, {"MainRotor", "TailRotor"}, var.GetFloat());
 	}
 }
 
@@ -121,11 +137,11 @@ class ATH_VehicleFuelTankHealthAttribute : ATH_VehicleComponentHealthAttributeBa
 {
 	override SCR_BaseEditorAttributeVar ReadVariable(Managed item, SCR_AttributesManagerEditorComponent manager)
 	{
-		return SCR_BaseEditorAttributeVar.CreateFloat(GetHitzonesHealthScaled(IEntity.Cast(item), {"FuelTank", "FuelTank_L", "FuelTank_R"}));
+		return SCR_BaseEditorAttributeVar.CreateFloat(GetHitzonesHealthScaled(item, {"FuelTank", "FuelTank_L", "FuelTank_R"}));
 	}
 	
 	override void WriteVariable(Managed item, SCR_BaseEditorAttributeVar var, SCR_AttributesManagerEditorComponent manager, int playerID)
 	{
-		if (var) SetHitzonesHealthScaled(IEntity.Cast(item), {"FuelTank", "FuelTank_L", "FuelTank_R"}, var.GetFloat());
+		if (var) SetHitzonesHealthScaled(item, {"FuelTank", "FuelTank_L", "FuelTank_R"}, var.GetFloat());
 	}
 }

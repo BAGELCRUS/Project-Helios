@@ -1,5 +1,5 @@
 GameProject {
- ID "ATHENA111"
+ ID "ATHENA"
  GUID "69FB32E48756F0A4"
  TITLE "ATHENA - Game Master overhaul"
  Dependencies {

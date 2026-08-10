@@ -3,7 +3,10 @@ class ATH_EngineToggleEditorAttribute : SCR_BaseEditorAttribute
 {
 	override SCR_BaseEditorAttributeVar ReadVariable(Managed item, SCR_AttributesManagerEditorComponent manager)
 	{
-		IEntity entity = IEntity.Cast(item);
+		SCR_EditableEntityComponent editableEntity = SCR_EditableEntityComponent.Cast(item);
+		if (!editableEntity) return null;
+		
+		IEntity entity = editableEntity.GetOwner();
 		if (!entity) return null;
 		
 		Vehicle vehicle = Vehicle.Cast(entity);
@@ -19,7 +22,10 @@ class ATH_EngineToggleEditorAttribute : SCR_BaseEditorAttribute
 	{
 		if (!var) return;
 		
-		IEntity entity = IEntity.Cast(item);
+		SCR_EditableEntityComponent editableEntity = SCR_EditableEntityComponent.Cast(item);
+		if (!editableEntity) return;
+		
+		IEntity entity = editableEntity.GetOwner();
 		if (!entity) return;
 		
 		Vehicle vehicle = Vehicle.Cast(entity);
