@@ -69,7 +69,7 @@ class ODIN_HeliosSettingsSubMenu : SCR_SettingsSubMenuBase
 			m_wCurrentSettingsRoot = null;
 		}
 		
-		// Load the newly selected mod's layout into the frame
+		// Load the newly selected mod's layout into the container
 		if (mod.m_sLayoutPath != string.Empty)
 		{
 			m_wCurrentSettingsRoot = GetGame().GetWorkspace().CreateWidgets(mod.m_sLayoutPath, m_wModSelectorFrame);

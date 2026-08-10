@@ -12,8 +12,13 @@ VerticalLayoutWidgetClass {
    Name "ModSelectorDropdown"
    Slot LayoutSlot "{69F2594A9DFFAD17}" {
    }
+   components {
+    SCR_ComboBoxComponent "{546B1D464BC32853}" {
+     m_sLabel "Mod select"
+    }
+   }
   }
-  FrameWidgetClass "{69F2594BC06CB4CE}" {
+  VerticalLayoutWidgetClass "{69F2594BC06CB4CE}" {
    Name "SettingsContainer"
    Slot LayoutSlot "{69F2594A9DFFAD07}" {
    }
