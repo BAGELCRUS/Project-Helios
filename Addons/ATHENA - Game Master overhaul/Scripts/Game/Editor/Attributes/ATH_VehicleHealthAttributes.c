@@ -1,16 +1,6 @@
 [BaseContainerProps(), SCR_BaseContainerCustomTitleUIInfo("m_UIInfo")]
 class ATH_VehicleOverallHealthAttribute : SCR_BaseValueListEditorAttribute
 {
-	override int GetEntries(notnull array<ref SCR_BaseEditorAttributeEntry> outEntries)
-	{
-		SCR_EditorAttributeBaseValues values = new SCR_EditorAttributeBaseValues();
-		values.m_fMin = 0;
-		values.m_fMax = 1;
-		values.m_fStep = 0.05;
-		outEntries.Insert(new SCR_BaseEditorAttributeEntrySlider(values));
-		return outEntries.Count();
-	}
-	
 	override SCR_BaseEditorAttributeVar ReadVariable(Managed item, SCR_AttributesManagerEditorComponent manager)
 	{
 		SCR_EditableEntityComponent editableEntity = SCR_EditableEntityComponent.Cast(item);
@@ -45,16 +35,6 @@ class ATH_VehicleOverallHealthAttribute : SCR_BaseValueListEditorAttribute
 // Base class for component health attributes
 class ATH_VehicleComponentHealthAttributeBase : SCR_BaseValueListEditorAttribute
 {
-	override int GetEntries(notnull array<ref SCR_BaseEditorAttributeEntry> outEntries)
-	{
-		SCR_EditorAttributeBaseValues values = new SCR_EditorAttributeBaseValues();
-		values.m_fMin = 0;
-		values.m_fMax = 1;
-		values.m_fStep = 0.05;
-		outEntries.Insert(new SCR_BaseEditorAttributeEntrySlider(values));
-		return outEntries.Count();
-	}
-	
 	protected float GetHitzonesHealthScaled(Managed item, array<string> hitzoneNames)
 	{
 		SCR_EditableEntityComponent editableEntity = SCR_EditableEntityComponent.Cast(item);
