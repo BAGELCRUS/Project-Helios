@@ -35,34 +35,36 @@ class ATH_VehicleOverallHealthAttribute : SCR_BaseValueListEditorAttribute
 // Base class for component health attributes
 class ATH_VehicleComponentHealthAttributeBase : SCR_BaseValueListEditorAttribute
 {
-	protected float GetHitzonesHealthScaled(Managed item, array<string> hitzoneNames)
+	protected float GetHitzonesHealthScaled(Managed item, typename hitzoneType)
 	{
 		SCR_EditableEntityComponent editableEntity = SCR_EditableEntityComponent.Cast(item);
-		if (!editableEntity) return 1.0;
+		if (!editableEntity) return -1.0;
 		IEntity entity = editableEntity.GetOwner();
-		if (!entity) return 1.0;
+		if (!entity) return -1.0;
 		
 		SCR_VehicleDamageManagerComponent dmgMgr = SCR_VehicleDamageManagerComponent.Cast(entity.FindComponent(SCR_VehicleDamageManagerComponent));
-		if (!dmgMgr) return 1.0;
+		if (!dmgMgr) return -1.0;
+		
+		array<HitZone> hitzones = {};
+		dmgMgr.GetAllHitZones(hitzones);
 		
 		float totalHealth = 0;
 		float totalMax = 0;
 		
-		foreach (string hzName : hitzoneNames)
+		foreach (HitZone hz : hitzones)
 		{
-			HitZone hz = dmgMgr.GetHitZoneByName(hzName);
-			if (hz)
+			if (hz.IsInherited(hitzoneType))
 			{
 				totalHealth += hz.GetHealth();
 				totalMax += hz.GetMaxHealth();
 			}
 		}
 		
-		if (totalMax == 0) return 1.0;
+		if (totalMax == 0) return -1.0;
 		return totalHealth / totalMax;
 	}
 	
-	protected void SetHitzonesHealthScaled(Managed item, array<string> hitzoneNames, float scale)
+	protected void SetHitzonesHealthScaled(Managed item, typename hitzoneType, float scale)
 	{
 		SCR_EditableEntityComponent editableEntity = SCR_EditableEntityComponent.Cast(item);
 		if (!editableEntity) return;
@@ -72,10 +74,12 @@ class ATH_VehicleComponentHealthAttributeBase : SCR_BaseValueListEditorAttribute
 		SCR_VehicleDamageManagerComponent dmgMgr = SCR_VehicleDamageManagerComponent.Cast(entity.FindComponent(SCR_VehicleDamageManagerComponent));
 		if (!dmgMgr) return;
 		
-		foreach (string hzName : hitzoneNames)
+		array<HitZone> hitzones = {};
+		dmgMgr.GetAllHitZones(hitzones);
+		
+		foreach (HitZone hz : hitzones)
 		{
-			HitZone hz = dmgMgr.GetHitZoneByName(hzName);
-			if (hz)
+			if (hz.IsInherited(hitzoneType))
 			{
 				hz.SetHealthScaled(scale);
 			}
@@ -88,12 +92,14 @@ class ATH_VehicleEngineHealthAttribute : ATH_VehicleComponentHealthAttributeBase
 {
 	override SCR_BaseEditorAttributeVar ReadVariable(Managed item, SCR_AttributesManagerEditorComponent manager)
 	{
-		return SCR_BaseEditorAttributeVar.CreateFloat(GetHitzonesHealthScaled(item, {"Engine"}));
+		float val = GetHitzonesHealthScaled(item, SCR_EngineHitZone);
+		if (val < 0) return null;
+		return SCR_BaseEditorAttributeVar.CreateFloat(val);
 	}
 	
 	override void WriteVariable(Managed item, SCR_BaseEditorAttributeVar var, SCR_AttributesManagerEditorComponent manager, int playerID)
 	{
-		if (var) SetHitzonesHealthScaled(item, {"Engine"}, var.GetFloat());
+		if (var) SetHitzonesHealthScaled(item, SCR_EngineHitZone, var.GetFloat());
 	}
 }
 
@@ -102,19 +108,14 @@ class ATH_VehicleWheelsHealthAttribute : ATH_VehicleComponentHealthAttributeBase
 {
 	override SCR_BaseEditorAttributeVar ReadVariable(Managed item, SCR_AttributesManagerEditorComponent manager)
 	{
-		// Common wheel names in Reforger
-		return SCR_BaseEditorAttributeVar.CreateFloat(GetHitzonesHealthScaled(item, {
-			"Wheel_L01", "Wheel_R01", "Wheel_L02", "Wheel_R02", 
-			"Wheel_L03", "Wheel_R03", "Wheel_L04", "Wheel_R04"
-		}));
+		float val = GetHitzonesHealthScaled(item, SCR_WheelHitZone);
+		if (val < 0) return null;
+		return SCR_BaseEditorAttributeVar.CreateFloat(val);
 	}
 	
 	override void WriteVariable(Managed item, SCR_BaseEditorAttributeVar var, SCR_AttributesManagerEditorComponent manager, int playerID)
 	{
-		if (var) SetHitzonesHealthScaled(item, {
-			"Wheel_L01", "Wheel_R01", "Wheel_L02", "Wheel_R02", 
-			"Wheel_L03", "Wheel_R03", "Wheel_L04", "Wheel_R04"
-		}, var.GetFloat());
+		if (var) SetHitzonesHealthScaled(item, SCR_WheelHitZone, var.GetFloat());
 	}
 }
 
@@ -123,12 +124,14 @@ class ATH_VehicleRotorHealthAttribute : ATH_VehicleComponentHealthAttributeBase
 {
 	override SCR_BaseEditorAttributeVar ReadVariable(Managed item, SCR_AttributesManagerEditorComponent manager)
 	{
-		return SCR_BaseEditorAttributeVar.CreateFloat(GetHitzonesHealthScaled(item, {"MainRotor", "TailRotor"}));
+		float val = GetHitzonesHealthScaled(item, SCR_RotorHitZone);
+		if (val < 0) return null;
+		return SCR_BaseEditorAttributeVar.CreateFloat(val);
 	}
 	
 	override void WriteVariable(Managed item, SCR_BaseEditorAttributeVar var, SCR_AttributesManagerEditorComponent manager, int playerID)
 	{
-		if (var) SetHitzonesHealthScaled(item, {"MainRotor", "TailRotor"}, var.GetFloat());
+		if (var) SetHitzonesHealthScaled(item, SCR_RotorHitZone, var.GetFloat());
 	}
 }
 
@@ -137,11 +140,13 @@ class ATH_VehicleFuelTankHealthAttribute : ATH_VehicleComponentHealthAttributeBa
 {
 	override SCR_BaseEditorAttributeVar ReadVariable(Managed item, SCR_AttributesManagerEditorComponent manager)
 	{
-		return SCR_BaseEditorAttributeVar.CreateFloat(GetHitzonesHealthScaled(item, {"FuelTank", "FuelTank_L", "FuelTank_R"}));
+		float val = GetHitzonesHealthScaled(item, SCR_FuelHitZone);
+		if (val < 0) return null;
+		return SCR_BaseEditorAttributeVar.CreateFloat(val);
 	}
 	
 	override void WriteVariable(Managed item, SCR_BaseEditorAttributeVar var, SCR_AttributesManagerEditorComponent manager, int playerID)
 	{
-		if (var) SetHitzonesHealthScaled(item, {"FuelTank", "FuelTank_L", "FuelTank_R"}, var.GetFloat());
+		if (var) SetHitzonesHealthScaled(item, SCR_FuelHitZone, var.GetFloat());
 	}
 }

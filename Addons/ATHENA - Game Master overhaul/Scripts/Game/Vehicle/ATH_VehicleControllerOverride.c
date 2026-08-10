@@ -5,7 +5,39 @@ modded class VehicleControllerComponent : BaseVehicleControllerComponent
 
 	[RplProp(onRplName: "OnLightsOverrideChanged")]
 	protected int m_iATH_LightsForcedState; // 0 = Auto, 1 = Off, 2 = Headlights, 3 = HiBeam, 4 = Hazard
+	[RplProp(onRplName: "OnLockStateChanged")]
+	protected bool m_bATH_IsVehicleLocked;
 	
+	//------------------------------------------------------------------------------------------------
+	// Lock Override
+	//------------------------------------------------------------------------------------------------
+	bool ATH_IsVehicleLocked()
+	{
+		return m_bATH_IsVehicleLocked;
+	}
+	
+	void ATH_SetVehicleLocked(bool locked)
+	{
+		m_bATH_IsVehicleLocked = locked;
+		Replication.BumpMe();
+		OnLockStateChanged();
+	}
+	
+	protected void OnLockStateChanged()
+	{
+		BaseCompartmentManagerComponent compartmentMgr = BaseCompartmentManagerComponent.Cast(GetOwner().FindComponent(BaseCompartmentManagerComponent));
+		if (!compartmentMgr)
+			return;
+			
+		array<BaseCompartmentSlot> compartments = {};
+		compartmentMgr.GetCompartments(compartments);
+		
+		foreach (BaseCompartmentSlot slot : compartments)
+		{
+			slot.SetCompartmentAccessible(!m_bATH_IsVehicleLocked);
+		}
+	}
+
 	//------------------------------------------------------------------------------------------------
 	// Engine Override
 	//------------------------------------------------------------------------------------------------
@@ -35,9 +67,18 @@ modded class VehicleControllerComponent : BaseVehicleControllerComponent
 		
 		if (m_bATH_EngineForcedOn)
 		{
-			// The engine was stopped (likely by the auto-shutoff when players left).
-			// We force it back on immediately.
-			StartEngine();
+			if (m_iOccupants > 0)
+			{
+				// A player manually turned it off while inside.
+				// Clear the override so it stays off.
+				m_bATH_EngineForcedOn = false;
+				Replication.BumpMe();
+			}
+			else
+			{
+				// Auto-shutoff triggered because it's empty, force it back on!
+				StartEngine();
+			}
 		}
 	}
 
