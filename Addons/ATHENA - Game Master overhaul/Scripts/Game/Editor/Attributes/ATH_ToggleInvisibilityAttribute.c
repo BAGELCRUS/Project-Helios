@@ -11,10 +11,6 @@ class ATH_ToggleInvisibilityAttribute : SCR_BaseEditorAttribute
 		if (!entity)
 			return null;
 			
-		CharacterIdentityComponent identity = CharacterIdentityComponent.Cast(entity.FindComponent(CharacterIdentityComponent));
-		if (!identity)
-			return null; // Don't show if not a character
-			
 		// True if INVISIBLE (i.e. VISIBLE flag is not set)
 		bool isInvisible = (entity.GetFlags() & EntityFlags.VISIBLE) == 0;
 		return SCR_BaseEditorAttributeVar.CreateBool(isInvisible);
@@ -33,10 +29,6 @@ class ATH_ToggleInvisibilityAttribute : SCR_BaseEditorAttribute
 		if (!entity)
 			return;
 			
-		CharacterIdentityComponent identity = CharacterIdentityComponent.Cast(entity.FindComponent(CharacterIdentityComponent));
-		if (!identity)
-			return;
-			
 		bool makeInvisible = var.GetBool();
 		
 		if (makeInvisible)
@@ -48,8 +40,12 @@ class ATH_ToggleInvisibilityAttribute : SCR_BaseEditorAttribute
 			entity.SetFlags(EntityFlags.VISIBLE, true);
 		}
 		
-		// SetVisibleAll ensures the character's identity meshes are handled correctly
-		identity.SetVisibleAll(!makeInvisible);
+		CharacterIdentityComponent identity = CharacterIdentityComponent.Cast(entity.FindComponent(CharacterIdentityComponent));
+		if (identity)
+		{
+			// SetVisibleAll ensures the character's identity meshes are handled correctly
+			identity.SetVisibleAll(!makeInvisible);
+		}
 		
 		PerceptionComponent perception = PerceptionComponent.Cast(entity.FindComponent(PerceptionComponent));
 		if (perception)
