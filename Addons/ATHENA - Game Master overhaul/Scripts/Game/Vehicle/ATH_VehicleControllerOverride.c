@@ -57,7 +57,11 @@ modded class VehicleControllerComponent : BaseVehicleControllerComponent
 	{
 		if (m_bATH_EngineForcedOn && !IsEngineOn())
 		{
-			StartEngine();
+			ForceStartEngine();
+		}
+		else if (!m_bATH_EngineForcedOn && IsEngineOn())
+		{
+			ForceStopEngine();
 		}
 	}
 
@@ -77,7 +81,7 @@ modded class VehicleControllerComponent : BaseVehicleControllerComponent
 			else
 			{
 				// Auto-shutoff triggered because it's empty, force it back on!
-				StartEngine();
+				ForceStartEngine();
 			}
 		}
 	}
