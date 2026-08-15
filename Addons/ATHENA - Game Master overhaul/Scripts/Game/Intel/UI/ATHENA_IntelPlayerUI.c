@@ -34,8 +34,8 @@ class ATHENA_IntelPlayerUI : SCR_ConfigurableDialogUi
 		if (!root)
 			return;
 
-		m_wIntelTitle = TextWidget.Cast(root.FindAnyWidget("TitleText"));
-		m_wIntelDescription = RichTextWidget.Cast(root.FindAnyWidget("DescriptionText"));
+		m_wIntelTitle = TextWidget.Cast(root.FindAnyWidget("BodyTitleText"));
+		m_wIntelDescription = RichTextWidget.Cast(root.FindAnyWidget("BodyDescriptionText"));
 
 		if (m_wIntelTitle)
 			m_wIntelTitle.SetText(s_sNextTitle);
@@ -43,8 +43,8 @@ class ATHENA_IntelPlayerUI : SCR_ConfigurableDialogUi
 		if (m_wIntelDescription)
 			m_wIntelDescription.SetText(s_sNextDescription);
 
-		// Hook up the close button. Note: SCR_ConfigurableDialogUi already has a Close() method.
-		ButtonWidget closeBtn = ButtonWidget.Cast(root.FindAnyWidget("CloseButton"));
+		// Hook up the close button prefab
+		Widget closeBtn = root.FindAnyWidget("CloseButton0");
 		if (closeBtn)
 		{
 			SCR_ButtonBaseComponent btnComp = SCR_ButtonBaseComponent.Cast(closeBtn.FindHandler(SCR_ButtonBaseComponent));
