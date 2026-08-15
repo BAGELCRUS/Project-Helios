@@ -1,0 +1,20 @@
+GenericEntity : "{5256290A5C99C729}Prefabs/Props/Military/AmmoBoxes/EquipmentBoxStack/US/EquipmentBoxStack_US_01__intel_Test.et" {
+ components {
+  ATHENA_IntelComponent "{6A1D70B3F76B5937}" {
+  }
+  ActionsManagerComponent "{5476B36C403D4CC0}" {
+   Enabled 1
+   additionalActions {
+    ATHENA_IntelWorldAction "{6A1D70B3E58D0B92}" {
+     ParentContextList {
+      "default"
+     }
+     UIInfo UIInfo "{6A1D70B3E10CA241}" {
+      Name "Open Intel"
+     }
+    }
+   }
+  }
+ }
+ coords 128.814 1 174.538
+}

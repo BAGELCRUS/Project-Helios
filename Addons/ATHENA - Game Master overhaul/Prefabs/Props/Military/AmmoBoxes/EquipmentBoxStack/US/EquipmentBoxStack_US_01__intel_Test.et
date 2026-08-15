@@ -1,0 +1,31 @@
+GenericEntity : "{37DA9B4DBC0427E5}Prefabs/Props/Military/AmmoBoxes/EquipmentBoxStack/EquipmentBoxStack_01_V2_base.et" {
+ ID "F0DBA538AC2A0552"
+ components {
+  MeshObject "{5872F0EB7FA40561}" {
+   Object "{C86C1F784CE41386}Assets/Props/Military/AmmoBox/EquipmentBoxStack/EquipmentBoxStack_01_V2.xob"
+  }
+  RigidBody "{5872F0EB7DFB5A9D}" {
+   ResponseIndex "MediumDestructible"
+  }
+  SCR_DestructionMultiPhaseComponent "{58F89684469E44B1}" {
+   m_bPassDamageToChildren 1
+   m_DestroySpawnObjects {
+    SCR_DebrisSpawnable "{58D2F2C60843B78D}" {
+     m_ModelPrefabs +{
+     }
+    }
+   }
+   m_aDamagePhases {
+    SCR_DamagePhaseData "{58D2F2C60B6E95FA}" {
+     m_PhaseModel "{8228EA1C109D06DD}Assets/Props/Military/AmmoBox/EquipmentBoxStack/Dst/EquipmentBoxStack_01_V2_dst/EquipmentBoxStack_01_V2_dst_01.xob"
+     m_PhaseDestroySpawnObjects {
+      SCR_DebrisSpawnable "{58D2F2C6D54B997F}" {
+       m_ModelPrefabs +{
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}
