@@ -1,47 +1,53 @@
 class ATHENA_IntelWorldAction : ScriptedUserAction
 {
-	[Attribute("Read Intel", UIWidgets.EditBox, desc: "Name of the action shown to the player.")]
-	protected string m_sActionName;
+	protected ATHENA_IntelComponent m_IntelComp;
+
+	override void Init(IEntity pOwnerEntity, GenericComponent pManagerComponent)
+	{
+		m_IntelComp = ATHENA_IntelComponent.Cast(pOwnerEntity.FindComponent(ATHENA_IntelComponent));
+		
+		// Note: Action Duration cannot be dynamically populated into the action from the component in script.
+		// It must be set directly in the prefab's ActionsManager component on this ScriptedUserAction.
+	}
 
 	override void PerformAction(IEntity pOwnerEntity, IEntity pUserEntity)
 	{
-		Print("ATHENA_IntelWorldAction: PerformAction CALLED", LogLevel.NORMAL);
-		
-		ATHENA_IntelComponent intelComp = ATHENA_IntelComponent.Cast(pOwnerEntity.FindComponent(ATHENA_IntelComponent));
-		if (!intelComp)
+		if (!m_IntelComp)
 		{
 			Print("ATHENA_IntelWorldAction: No ATHENA_IntelComponent found on entity!", LogLevel.ERROR);
 			return;
 		}
 
-		Print("ATHENA_IntelWorldAction: Component found, title=" + intelComp.GetTitle(), LogLevel.NORMAL);
-
-		// 1. Open the UI via the static factory
-		string title = intelComp.GetTitle();
-		string description = intelComp.GetDescription();
+		string title = m_IntelComp.GetTitle();
+		string description = m_IntelComp.GetDescription();
 		
 		ATHENA_IntelPlayerUI uiInstance = ATHENA_IntelPlayerUI.Open(title, description);
 
-		// 2. Handle Pings (Notifications) via RPC
-		if (intelComp.ShouldPingGM() || intelComp.ShouldPingEveryone())
+		// Handle Pings (Notifications) via RPC
+		EAthenaIntelShareType shareType = m_IntelComp.GetShareType();
+		bool pingGM = m_IntelComp.ShouldPingGM();
+		
+		if (pingGM || shareType != EAthenaIntelShareType.Nobody)
 		{
-			intelComp.RequestPing(intelComp.ShouldPingGM(), intelComp.ShouldPingEveryone(), title);
+			// We pass the local player ID as the source of the interaction
+			int playerId = SCR_PlayerController.GetLocalPlayerId();
+			m_IntelComp.RequestPing(pingGM, shareType, title, playerId);
 		}
 
-		// 3. Handle Deletion
-		if (intelComp.ShouldDeleteAfterOpen())
+		// Handle Deletion
+		if (m_IntelComp.ShouldDeleteOnCompletion())
 		{
-			// We must ask the server to delete it.
-			// Since ScriptedUserAction doesn't have an RPC directly built-in for this without extending,
-			// we call a method on the component. If the component is replicated, it should ideally use an RPC.
-			// For now, we assume the component has the delete logic.
-			intelComp.DeleteIntelEntity();
+			m_IntelComp.DeleteIntelEntity();
 		}
 	}
 
 	override bool GetActionNameScript(out string outName)
 	{
-		outName = m_sActionName;
+		if (m_IntelComp)
+			outName = m_IntelComp.GetActionText();
+		else
+			outName = "Read Intel";
+		
 		return true;
 	}
 

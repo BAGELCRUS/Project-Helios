@@ -1,3 +1,10 @@
+enum EAthenaIntelShareType
+{
+	Nobody,
+	Group,
+	Faction
+}
+
 [ComponentEditorProps(category: "GameScripted/Intel", description: "Component to store intel information and settings.")]
 class ATHENA_IntelComponentClass : ScriptComponentClass
 {
@@ -11,14 +18,23 @@ class ATHENA_IntelComponent : ScriptComponent
 	[Attribute("Top secret description...", UIWidgets.EditBoxMultiline, desc: "Description of the Intel displayed in the UI.", category: "Intel Settings")]
 	protected string m_sIntelDescription;
 
-	[Attribute("false", UIWidgets.CheckBox, desc: "Should reading this intel ping the Game Master?", category: "Intel Settings")]
+	[Attribute("0", UIWidgets.ComboBox, desc: "Who should receive a notification when this is opened?", enums: ParamEnumArray.FromEnum(EAthenaIntelShareType), category: "Intel Settings")]
+	protected EAthenaIntelShareType m_ShareType;
+
+	[Attribute("false", UIWidgets.CheckBox, desc: "Should picking up this intel ping the Game Master?", category: "Intel Settings")]
 	protected bool m_bPingGM;
 
-	[Attribute("false", UIWidgets.CheckBox, desc: "Should reading this intel ping everyone on the server?", category: "Intel Settings")]
-	protected bool m_bPingEveryone;
-
 	[Attribute("false", UIWidgets.CheckBox, desc: "Should this intel item be deleted from the world after it is opened?", category: "Intel Settings")]
-	protected bool m_bDeleteAfterOpen;
+	protected bool m_bDeleteOnCompletion;
+
+	[Attribute("Read Intel", UIWidgets.EditBox, desc: "Action text shown to the player.", category: "Intel Settings")]
+	protected string m_sActionText;
+
+	[Attribute("", UIWidgets.ResourcePickerThumbnail, desc: "Action sound played upon completion", params: "acp", category: "Intel Settings")]
+	protected ResourceName m_ActionSound;
+
+	[Attribute("0", UIWidgets.Slider, desc: "How long the action takes (seconds)", params: "0 60 1", category: "Intel Settings")]
+	protected float m_fActionDuration;
 
 	// Getters
 	string GetTitle()
@@ -30,20 +46,35 @@ class ATHENA_IntelComponent : ScriptComponent
 	{
 		return m_sIntelDescription;
 	}
+	
+	EAthenaIntelShareType GetShareType()
+	{
+		return m_ShareType;
+	}
 
 	bool ShouldPingGM()
 	{
 		return m_bPingGM;
 	}
 
-	bool ShouldPingEveryone()
+	bool ShouldDeleteOnCompletion()
 	{
-		return m_bPingEveryone;
+		return m_bDeleteOnCompletion;
 	}
-
-	bool ShouldDeleteAfterOpen()
+	
+	string GetActionText()
 	{
-		return m_bDeleteAfterOpen;
+		return m_sActionText;
+	}
+	
+	ResourceName GetActionSound()
+	{
+		return m_ActionSound;
+	}
+	
+	float GetActionDuration()
+	{
+		return m_fActionDuration;
 	}
 	
 	// Server-side function to handle deleting the entity
@@ -63,36 +94,67 @@ class ATHENA_IntelComponent : ScriptComponent
 	}
 	
 	// Networking logic for pings
-	void RequestPing(bool pingGM, bool pingEveryone, string title)
+	void RequestPing(bool pingGM, EAthenaIntelShareType shareType, string title, int playerId)
 	{
-		Rpc(RpcDo_PingServer, pingGM, pingEveryone, title);
+		Rpc(RpcDo_PingServer, pingGM, shareType, title, playerId);
 	}
 	
 	[RplRpc(RplChannel.Reliable, RplRcver.Server)]
-	protected void RpcDo_PingServer(bool pingGM, bool pingEveryone, string title)
+	protected void RpcDo_PingServer(bool pingGM, EAthenaIntelShareType shareType, string title, int playerId)
 	{
-		// On the server, we dispatch the notification to clients.
-		// For dynamic strings, vanilla notifications don't easily support it without custom enums.
-		// So we use a multicast RPC to show a hint on all clients.
-		if (pingEveryone)
+		// Notify clients depending on ShareType
+		// Currently only basic support for Nobody/Group/Faction
+		if (shareType != EAthenaIntelShareType.Nobody)
 		{
-			Rpc(RpcDo_ShowHintClient, title, false);
+			// Simplification: In a full implementation, we'd iterate over faction/group members.
+			// For now, we will broadcast and let clients filter.
+			Rpc(RpcDo_ShowHintClient, title, false, shareType, playerId);
 		}
-		else if (pingGM)
+		
+		if (pingGM)
 		{
-			Rpc(RpcDo_ShowHintClient, title, true);
+			// Ping GM separately (true flag)
+			Rpc(RpcDo_ShowHintClient, title, true, EAthenaIntelShareType.Nobody, playerId);
 		}
 	}
 
 	[RplRpc(RplChannel.Reliable, RplRcver.Broadcast)]
-	protected void RpcDo_ShowHintClient(string title, bool gmOnly)
+	protected void RpcDo_ShowHintClient(string title, bool gmOnly, EAthenaIntelShareType shareType, int sourcePlayerId)
 	{
-		// If it's GM only, check if local player is GM (requires SCR_EditorManagerEntity check, keeping simple for now)
+		int localPlayerId = SCR_PlayerController.GetLocalPlayerId();
+		
 		if (gmOnly)
 		{
 			SCR_EditorManagerEntity editorManager = SCR_EditorManagerEntity.GetInstance();
 			if (!editorManager || !editorManager.IsOpened())
 				return;
+			
+			SCR_HintManagerComponent.GetInstance().ShowCustomHint(string.Format("Intel '%1' was collected", title), "Intel Collected", 10.0, false);
+			return;
+		}
+		
+		// For Faction/Group logic:
+		if (shareType == EAthenaIntelShareType.Faction)
+		{
+			SCR_FactionManager factionManager = SCR_FactionManager.Cast(GetGame().GetFactionManager());
+			if (factionManager)
+			{
+				Faction sourceFaction = factionManager.GetPlayerFaction(sourcePlayerId);
+				Faction localFaction = factionManager.GetPlayerFaction(localPlayerId);
+				if (sourceFaction != localFaction || !sourceFaction)
+					return; // Not same faction
+			}
+		}
+		else if (shareType == EAthenaIntelShareType.Group)
+		{
+			SCR_GroupsManagerComponent groupManager = SCR_GroupsManagerComponent.GetInstance();
+			if (groupManager)
+			{
+				SCR_AIGroup sourceGroup = groupManager.GetPlayerGroup(sourcePlayerId);
+				SCR_AIGroup localGroup = groupManager.GetPlayerGroup(localPlayerId);
+				if (sourceGroup != localGroup || !sourceGroup)
+					return; // Not same group
+			}
 		}
 
 		SCR_HintManagerComponent.GetInstance().ShowCustomHint(title, "Intel Discovered", 10.0, false);
