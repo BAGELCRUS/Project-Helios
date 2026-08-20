@@ -33,6 +33,12 @@ class ATHENA_IntelComponent : ScriptComponent
 	[Attribute("", UIWidgets.ResourcePickerThumbnail, desc: "Action sound played upon completion", params: "acp", category: "Intel Settings")]
 	protected ResourceName m_ActionSound;
 
+	[Attribute("", UIWidgets.EditBox, desc: "The specific event name to START the sound (e.g., SOUND_PICKUP_START)", category: "Intel Settings")]
+	protected string m_sActionSoundEventStart;
+
+	[Attribute("", UIWidgets.EditBox, desc: "The specific event name to END the sound (e.g., SOUND_PICKUP_STOP)", category: "Intel Settings")]
+	protected string m_sActionSoundEventEnd;
+
 	[Attribute("0", UIWidgets.Slider, desc: "How long the action takes (seconds)", params: "0 60 1", category: "Intel Settings")]
 	protected float m_fActionDuration;
 
@@ -72,6 +78,16 @@ class ATHENA_IntelComponent : ScriptComponent
 		return m_ActionSound;
 	}
 	
+	string GetActionSoundEventStart()
+	{
+		return m_sActionSoundEventStart;
+	}
+
+	string GetActionSoundEventEnd()
+	{
+		return m_sActionSoundEventEnd;
+	}
+	
 	float GetActionDuration()
 	{
 		return m_fActionDuration;
@@ -80,7 +96,18 @@ class ATHENA_IntelComponent : ScriptComponent
 	// Server-side function to handle deleting the entity
 	void DeleteIntelEntity()
 	{
-		Rpc(RpcDo_DeleteIntelEntity);
+		if (Replication.IsServer())
+		{
+			IEntity owner = GetOwner();
+			if (owner)
+			{
+				SCR_EntityHelper.DeleteEntityAndChildren(owner);
+			}
+		}
+		else
+		{
+			Rpc(RpcDo_DeleteIntelEntity);
+		}
 	}
 
 	[RplRpc(RplChannel.Reliable, RplRcver.Server)]

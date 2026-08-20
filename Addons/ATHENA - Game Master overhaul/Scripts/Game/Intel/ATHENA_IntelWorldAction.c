@@ -6,8 +6,49 @@ class ATHENA_IntelWorldAction : ScriptedUserAction
 	{
 		m_IntelComp = ATHENA_IntelComponent.Cast(pOwnerEntity.FindComponent(ATHENA_IntelComponent));
 		
-		// Note: Action Duration cannot be dynamically populated into the action from the component in script.
-		// It must be set directly in the prefab's ActionsManager component on this ScriptedUserAction.
+		// Note: SetActionDuration() causes a compile error in this context.
+		// Instead, we dynamically scale the duration by overriding GetActionProgressScript.
+		// The prefab MUST have a Duration > 0 (e.g., 1.0) for it to be treated as a continuous action.
+	}
+
+
+
+	protected bool m_bStartSoundPlayed = false;
+
+	override float GetActionProgressScript(float fProgress, float timeSlice)
+	{
+		if (m_IntelComp)
+		{
+			// Play start sound on the very first frame of interaction
+			if (fProgress == 0 && !m_bStartSoundPlayed)
+			{
+				m_bStartSoundPlayed = true;
+				
+				ResourceName soundProject = m_IntelComp.GetActionSound();
+				string soundEventStart = m_IntelComp.GetActionSoundEventStart();
+				if (!soundProject.IsEmpty() && !soundEventStart.IsEmpty())
+				{
+					IEntity owner = GetOwner();
+					if (owner)
+					{
+						vector mat[4];
+						owner.GetTransform(mat);
+						AudioSystem.PlayEvent(soundProject, soundEventStart, mat);
+					}
+				}
+			}
+
+			float desiredDuration = m_IntelComp.GetActionDuration();
+			float prefabDuration = GetActionDuration();
+			
+			// Scale the time slice so it completes in exactly `desiredDuration` seconds
+			if (desiredDuration > 0 && prefabDuration > 0)
+			{
+				return fProgress + ((timeSlice / desiredDuration) * prefabDuration);
+			}
+		}
+		
+		return fProgress + timeSlice;
 	}
 
 	override void PerformAction(IEntity pOwnerEntity, IEntity pUserEntity)
@@ -21,23 +62,48 @@ class ATHENA_IntelWorldAction : ScriptedUserAction
 		string title = m_IntelComp.GetTitle();
 		string description = m_IntelComp.GetDescription();
 		
-		ATHENA_IntelPlayerUI uiInstance = ATHENA_IntelPlayerUI.Open(title, description);
+		// Check if we are the local player who interacted
+		PlayerController pc = GetGame().GetPlayerController();
+		bool isLocalPlayer = false;
+		if (pc && pc.GetControlledEntity() == pUserEntity)
+			isLocalPlayer = true;
 
-		// Handle Pings (Notifications) via RPC
-		EAthenaIntelShareType shareType = m_IntelComp.GetShareType();
-		bool pingGM = m_IntelComp.ShouldPingGM();
-		
-		if (pingGM || shareType != EAthenaIntelShareType.Nobody)
+		if (isLocalPlayer)
 		{
-			// We pass the local player ID as the source of the interaction
-			int playerId = SCR_PlayerController.GetLocalPlayerId();
-			m_IntelComp.RequestPing(pingGM, shareType, title, playerId);
+			ATHENA_IntelPlayerUI uiInstance = ATHENA_IntelPlayerUI.Open(title, description);
+
+			// Play END sound if configured
+			ResourceName soundProject = m_IntelComp.GetActionSound();
+			string soundEventEnd = m_IntelComp.GetActionSoundEventEnd();
+			if (!soundProject.IsEmpty() && !soundEventEnd.IsEmpty())
+			{
+				vector mat[4];
+				pOwnerEntity.GetTransform(mat);
+				AudioSystem.PlayEvent(soundProject, soundEventEnd, mat);
+			}
+
+			// Reset start sound for the next interaction
+			m_bStartSoundPlayed = false;
 		}
 
-		// Handle Deletion
-		if (m_IntelComp.ShouldDeleteOnCompletion())
+		if (Replication.IsServer())
 		{
-			m_IntelComp.DeleteIntelEntity();
+			// Handle Pings (Notifications) via RPC
+			EAthenaIntelShareType shareType = m_IntelComp.GetShareType();
+			bool pingGM = m_IntelComp.ShouldPingGM();
+			
+			if (pingGM || shareType != EAthenaIntelShareType.Nobody)
+			{
+				// Get the correct player ID of the user on the server
+				int playerId = GetGame().GetPlayerManager().GetPlayerIdFromControlledEntity(pUserEntity);
+				m_IntelComp.RequestPing(pingGM, shareType, title, playerId);
+			}
+
+			// Handle Deletion
+			if (m_IntelComp.ShouldDeleteOnCompletion())
+			{
+				m_IntelComp.DeleteIntelEntity();
+			}
 		}
 	}
 
@@ -63,9 +129,8 @@ class ATHENA_IntelWorldAction : ScriptedUserAction
 	
 	override bool HasLocalEffectOnlyScript()
 	{
-		// Returning true means PerformAction runs ONLY on the Client who interacted.
-		// This is required so the Client can open their local UI.
-		// The ping and delete logic are handled via RPCs to the server inside PerformAction.
-		return true; 
+		// Returning false means PerformAction runs on the Client who interacted AND the Server.
+		// This is required so the Server can handle deleting the entity.
+		return false; 
 	}
 }
