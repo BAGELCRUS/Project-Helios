@@ -3,22 +3,25 @@
 class ATHENA_IntelPlayerUI : SCR_ConfigurableDialogUi
 {
 	protected TextWidget m_wIntelTitle;
+	protected TextWidget m_wIntelType;
 	protected RichTextWidget m_wIntelDescription;
 
 	static string s_sNextTitle;
+	static string s_sNextType;
 	static string s_sNextDescription;
 
 	//---------------------------------------------------------------------
 	// Static entry point: set data and tell the Dialog Manager to spawn it
 	//---------------------------------------------------------------------
-	static ATHENA_IntelPlayerUI Open(string title, string description)
+	static ATHENA_IntelPlayerUI Open(string title, string type, string description)
 	{
 		s_sNextTitle = title;
+		s_sNextType = type;
 		s_sNextDescription = description;
 		
 		// Create the dialog using the preset from our new config file
 		ATHENA_IntelPlayerUI dialog = new ATHENA_IntelPlayerUI();
-		SCR_ConfigurableDialogUi.CreateFromPreset("{69FB32E48756F0A4}Configs/Dialogs/IntelDialogs.conf", "intel", dialog);
+		SCR_ConfigurableDialogUi.CreateFromPreset("{5938AB21CE701D21}Configs/Dialogs/IntelDialogs.conf", "intel", dialog);
 		return dialog;
 	}
 
@@ -34,11 +37,15 @@ class ATHENA_IntelPlayerUI : SCR_ConfigurableDialogUi
 		if (!root)
 			return;
 
-		m_wIntelTitle = TextWidget.Cast(root.FindAnyWidget("BodyTitleText"));
+		m_wIntelTitle = TextWidget.Cast(root.FindAnyWidget("TITLE_TEXT"));
+		m_wIntelType = TextWidget.Cast(root.FindAnyWidget("TYPE_TEXT"));
 		m_wIntelDescription = RichTextWidget.Cast(root.FindAnyWidget("BodyDescriptionText"));
 
 		if (m_wIntelTitle)
 			m_wIntelTitle.SetText(s_sNextTitle);
+
+		if (m_wIntelType)
+			m_wIntelType.SetText(s_sNextType);
 
 		if (m_wIntelDescription)
 			m_wIntelDescription.SetText(s_sNextDescription);

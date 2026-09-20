@@ -1,0 +1,118 @@
+ButtonWidgetClass {
+ Name "IntelTab"
+ Slot AlignableSlot "{6A5728551F8CBFEE}" {
+  HorizontalAlign 3
+  VerticalAlign 3
+  Padding 0 0 0 15
+ }
+ IsPixelPerfect 0
+ Color 0.6939 0.6867 0.6172 0.5729
+ components {
+  ATHENA_IntelTabButtonComponent "{6A572854EF24E27B}" {
+  }
+ }
+ {
+  SizeLayoutWidgetClass "{6A6049A07C935B03}" {
+   Name "SizeLayout0"
+   Slot ButtonWidgetSlot "{6A6049A07C935CD1}" {
+    HorizontalAlign 3
+   }
+   AllowHeightOverride 1
+   HeightOverride 75
+   MaxDesiredWidth 400
+   MaxDesiredHeight 150
+   {
+    VerticalLayoutWidgetClass "{6A6049A352F96F4D}" {
+     Name "VerticalLayout0"
+     Slot AlignableSlot "{6A6049A352F96F6B}" {
+      HorizontalAlign 3
+      VerticalAlign 0
+      Padding 10 10 0 10
+     }
+     {
+      HorizontalLayoutWidgetClass "{6A6049A3586552F5}" {
+       Name "HorizontalLayout0"
+       Slot LayoutSlot "{6A6049A35865529B}" {
+       }
+       {
+        TextWidgetClass "{6A6049A34B637231}" {
+         Name "IntelTitle"
+         Slot LayoutSlot "{6A6049A34B63722C}" {
+         }
+         Color 0.0024 0.0027 0.0026 1
+         Text "Intel Title - ldkfjfl;fkjd;flkj"
+         "Font Size" 20
+         "Min Font Size" 20
+         FontProperties FontProperties "{6A6049A33432A23E}" {
+          Font "{CD2634D279AB011A}UI/Fonts/Roboto/Roboto_Bold.fnt"
+          Bold 1
+         }
+        }
+       }
+      }
+      HorizontalLayoutWidgetClass "{6A6049A28BA32410}" {
+       Name "HorizontalLayout1"
+       Slot LayoutSlot "{6A6049A28BA32434}" {
+       }
+       {
+        TextWidgetClass "{6A6049A2B5F5EF39}" {
+         Name "METHOOD"
+         Slot LayoutSlot "{6A6049A2B5F5E0D7}" {
+          Padding 0 10 0 0
+         }
+         Color 0.0052 0.006 0.0056 1
+         Text "Collected"
+         "Font Size" 15
+         "Min Font Size" 15
+         FontProperties FontProperties "{6A6049A2BB665B6B}" {
+          Font "{E2CBA6F76AAA42AF}UI/Fonts/Roboto/Roboto_Regular.fnt"
+         }
+        }
+        TextWidgetClass "{6A6049A24A134E91}" {
+         Name "DASH"
+         Slot LayoutSlot "{6A6049A2B5F5E0D7}" {
+          Padding 10 10 10 0
+         }
+         Color 0.0052 0.006 0.0056 1
+         Text "-"
+         "Font Size" 15
+         "Min Font Size" 15
+         FontProperties FontProperties "{6A6049A2BB665B6B}" {
+          Font "{E2CBA6F76AAA42AF}UI/Fonts/Roboto/Roboto_Regular.fnt"
+         }
+        }
+        TextWidgetClass "{6A6049A27C36BB75}" {
+         Name "TIME"
+         Slot LayoutSlot "{6A6049A2B5F5E0D7}" {
+          Padding 0 10 0 0
+         }
+         Color 0.0052 0.006 0.0056 1
+         Text "15SEP26 1930 CT"
+         "Font Size" 15
+         "Min Font Size" 15
+         FontProperties FontProperties "{6A6049A2BB665B6B}" {
+          Font "{E2CBA6F76AAA42AF}UI/Fonts/Roboto/Roboto_Regular.fnt"
+         }
+        }
+        TextWidgetClass "{6A6049A5D3401E4B}" {
+         Name "SHARED"
+         Slot LayoutSlot "{6A6049A2B5F5E0D7}" {
+          Padding 40 10 0 0
+         }
+         Color 0.0052 0.006 0.0056 1
+         Text "SHARED"
+         "Font Size" 15
+         "Min Font Size" 15
+         FontProperties FontProperties "{6A6049A2BB665B6B}" {
+          Font "{CD2634D279AB011A}UI/Fonts/Roboto/Roboto_Bold.fnt"
+          Bold 1
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

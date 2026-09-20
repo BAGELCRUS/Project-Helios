@@ -15,6 +15,9 @@ class ATHENA_IntelComponent : ScriptComponent
 	[Attribute("Confidential Intel", UIWidgets.EditBox, desc: "Title of the Intel displayed in the UI.", category: "Intel Settings")]
 	protected string m_sIntelTitle;
 
+	[Attribute("Document", UIWidgets.EditBox, desc: "Type of the Intel (e.g. Document, Map, Radio).", category: "Intel Settings")]
+	protected string m_sIntelType;
+
 	[Attribute("Top secret description...", UIWidgets.EditBoxMultiline, desc: "Description of the Intel displayed in the UI.", category: "Intel Settings")]
 	protected string m_sIntelDescription;
 
@@ -46,6 +49,11 @@ class ATHENA_IntelComponent : ScriptComponent
 	string GetTitle()
 	{
 		return m_sIntelTitle;
+	}
+
+	string GetType()
+	{
+		return m_sIntelType;
 	}
 
 	string GetDescription()
@@ -121,13 +129,13 @@ class ATHENA_IntelComponent : ScriptComponent
 	}
 	
 	// Networking logic for pings
-	void RequestPing(bool pingGM, EAthenaIntelShareType shareType, string title, int playerId)
+	void RequestPing(bool pingGM, EAthenaIntelShareType shareType, string title, string type, string description, int playerId)
 	{
-		Rpc(RpcDo_PingServer, pingGM, shareType, title, playerId);
+		Rpc(RpcDo_PingServer, pingGM, shareType, title, type, description, playerId);
 	}
 	
 	[RplRpc(RplChannel.Reliable, RplRcver.Server)]
-	protected void RpcDo_PingServer(bool pingGM, EAthenaIntelShareType shareType, string title, int playerId)
+	protected void RpcDo_PingServer(bool pingGM, EAthenaIntelShareType shareType, string title, string type, string description, int playerId)
 	{
 		// Notify clients depending on ShareType
 		// Currently only basic support for Nobody/Group/Faction
@@ -135,18 +143,18 @@ class ATHENA_IntelComponent : ScriptComponent
 		{
 			// Simplification: In a full implementation, we'd iterate over faction/group members.
 			// For now, we will broadcast and let clients filter.
-			Rpc(RpcDo_ShowHintClient, title, false, shareType, playerId);
+			Rpc(RpcDo_ShowHintClient, title, type, description, false, shareType, playerId);
 		}
 		
 		if (pingGM)
 		{
 			// Ping GM separately (true flag)
-			Rpc(RpcDo_ShowHintClient, title, true, EAthenaIntelShareType.Nobody, playerId);
+			Rpc(RpcDo_ShowHintClient, title, type, description, true, EAthenaIntelShareType.Nobody, playerId);
 		}
 	}
 
 	[RplRpc(RplChannel.Reliable, RplRcver.Broadcast)]
-	protected void RpcDo_ShowHintClient(string title, bool gmOnly, EAthenaIntelShareType shareType, int sourcePlayerId)
+	protected void RpcDo_ShowHintClient(string title, string type, string description, bool gmOnly, EAthenaIntelShareType shareType, int sourcePlayerId)
 	{
 		int localPlayerId = SCR_PlayerController.GetLocalPlayerId();
 		
@@ -182,6 +190,12 @@ class ATHENA_IntelComponent : ScriptComponent
 				if (sourceGroup != localGroup || !sourceGroup)
 					return; // Not same group
 			}
+		}
+
+		ATHENA_PlayerIntelComponent pic = ATHENA_PlayerIntelComponent.GetLocalInstance();
+		if (pic)
+		{
+			pic.AddIntelLocal(title, type, description, "Received");
 		}
 
 		SCR_HintManagerComponent.GetInstance().ShowCustomHint(title, "Intel Discovered", 10.0, false);

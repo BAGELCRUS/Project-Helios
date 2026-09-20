@@ -1,0 +1,21 @@
+$grp GenericEntity : "{5256290A5C99C729}Prefabs/Props/Military/AmmoBoxes/EquipmentBoxStack/US/EquipmentBoxStack_US_01__intel_Test.et" {
+ {
+  components {
+   ATHENA_IntelComponent "{6A1D70B3F76B5937}" {
+    m_fActionDuration 3
+   }
+  }
+  coords 1349.731 39 2135.722
+ }
+ {
+  components {
+   ATHENA_IntelComponent "{6A1D70B3F76B5937}" {
+    m_sIntelTitle "dwwd"
+    m_sIntelType "ghjk"
+    m_sIntelDescription "wdfdfghjnmk,,jhgtfrdedfrgtfhyjmhnjgbtfregtfhyjukmhngtfredfrgtfhyjukijuhygtfr"
+    m_fActionDuration 3
+   }
+  }
+  coords 1351.679 39 2137.968
+ }
+}

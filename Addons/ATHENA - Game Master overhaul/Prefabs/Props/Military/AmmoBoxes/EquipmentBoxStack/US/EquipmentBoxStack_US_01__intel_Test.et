@@ -27,5 +27,27 @@ GenericEntity : "{37DA9B4DBC0427E5}Prefabs/Props/Military/AmmoBoxes/EquipmentBox
     }
    }
   }
+  ActionsManagerComponent "{5476B36C403D4CC0}" {
+   Enabled 1
+   additionalActions {
+    ATHENA_IntelWorldAction "{6A1D70B3E58D0B92}" {
+     ParentContextList {
+      "default"
+     }
+     UIInfo UIInfo "{6A1D70B3E10CA241}" {
+      Name "Open Intel"
+     }
+     Duration 1
+    }
+   }
+  }
+  ATHENA_IntelComponent "{6A1D70B3F76B5937}" {
+   m_sIntelType "DWDWDWD"
+   m_sActionText "Action"
+   m_ActionSound "{951A2351637B9445}Sounds/Destruction/Buildings/Destruction_Buildings_Brick_Generic.acp"
+   m_sActionSoundEventStart "SOUND_BUILDING_DESTRUCTION_PRESTART"
+   m_sActionSoundEventEnd "SOUND_BUILDING_DESTRUCTION_END"
+   m_fActionDuration 10
+  }
  }
 }

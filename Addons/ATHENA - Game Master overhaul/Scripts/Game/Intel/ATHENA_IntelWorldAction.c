@@ -14,30 +14,43 @@ class ATHENA_IntelWorldAction : ScriptedUserAction
 
 
 	protected bool m_bStartSoundPlayed = false;
+	protected AudioHandle m_AudioHandle = AudioHandle.Invalid;
+
+	override void OnActionStart(IEntity pUserEntity)
+	{
+		if (m_IntelComp && !m_bStartSoundPlayed)
+		{
+			m_bStartSoundPlayed = true;
+			
+			ResourceName soundProject = m_IntelComp.GetActionSound();
+			string soundEventStart = m_IntelComp.GetActionSoundEventStart();
+			if (!soundProject.IsEmpty() && !soundEventStart.IsEmpty())
+			{
+				IEntity owner = GetOwner();
+				if (owner)
+				{
+					vector mat[4];
+					owner.GetTransform(mat);
+					m_AudioHandle = AudioSystem.PlayEvent(soundProject, soundEventStart, mat);
+				}
+			}
+		}
+	}
+
+	override void OnActionCanceled(IEntity pOwnerEntity, IEntity pUserEntity)
+	{
+		if (m_AudioHandle != AudioHandle.Invalid)
+		{
+			AudioSystem.TerminateSound(m_AudioHandle);
+			m_AudioHandle = AudioHandle.Invalid;
+		}
+		m_bStartSoundPlayed = false;
+	}
 
 	override float GetActionProgressScript(float fProgress, float timeSlice)
 	{
 		if (m_IntelComp)
 		{
-			// Play start sound on the very first frame of interaction
-			if (fProgress == 0 && !m_bStartSoundPlayed)
-			{
-				m_bStartSoundPlayed = true;
-				
-				ResourceName soundProject = m_IntelComp.GetActionSound();
-				string soundEventStart = m_IntelComp.GetActionSoundEventStart();
-				if (!soundProject.IsEmpty() && !soundEventStart.IsEmpty())
-				{
-					IEntity owner = GetOwner();
-					if (owner)
-					{
-						vector mat[4];
-						owner.GetTransform(mat);
-						AudioSystem.PlayEvent(soundProject, soundEventStart, mat);
-					}
-				}
-			}
-
 			float desiredDuration = m_IntelComp.GetActionDuration();
 			float prefabDuration = GetActionDuration();
 			
@@ -53,6 +66,12 @@ class ATHENA_IntelWorldAction : ScriptedUserAction
 
 	override void PerformAction(IEntity pOwnerEntity, IEntity pUserEntity)
 	{
+		if (m_AudioHandle != AudioHandle.Invalid)
+		{
+			AudioSystem.TerminateSound(m_AudioHandle);
+			m_AudioHandle = AudioHandle.Invalid;
+		}
+
 		if (!m_IntelComp)
 		{
 			Print("ATHENA_IntelWorldAction: No ATHENA_IntelComponent found on entity!", LogLevel.ERROR);
@@ -60,6 +79,7 @@ class ATHENA_IntelWorldAction : ScriptedUserAction
 		}
 
 		string title = m_IntelComp.GetTitle();
+		string type = m_IntelComp.GetType();
 		string description = m_IntelComp.GetDescription();
 		
 		// Check if we are the local player who interacted
@@ -70,7 +90,15 @@ class ATHENA_IntelWorldAction : ScriptedUserAction
 
 		if (isLocalPlayer)
 		{
-			ATHENA_IntelPlayerUI uiInstance = ATHENA_IntelPlayerUI.Open(title, description);
+			// Add intel to the local player's component immediately
+			ATHENA_PlayerIntelComponent pic = ATHENA_PlayerIntelComponent.GetLocalInstance();
+			if (pic)
+			{
+				pic.AddIntelLocal(title, type, description);
+				Print("ATHENA_IntelWorldAction: Added intel '" + title + "' to local player's component.", LogLevel.NORMAL);
+			}
+
+			ATHENA_IntelPlayerUI uiInstance = ATHENA_IntelPlayerUI.Open(title, type, description);
 
 			// Play END sound if configured
 			ResourceName soundProject = m_IntelComp.GetActionSound();
@@ -96,7 +124,7 @@ class ATHENA_IntelWorldAction : ScriptedUserAction
 			{
 				// Get the correct player ID of the user on the server
 				int playerId = GetGame().GetPlayerManager().GetPlayerIdFromControlledEntity(pUserEntity);
-				m_IntelComp.RequestPing(pingGM, shareType, title, playerId);
+				m_IntelComp.RequestPing(pingGM, shareType, title, type, description, playerId);
 			}
 
 			// Handle Deletion

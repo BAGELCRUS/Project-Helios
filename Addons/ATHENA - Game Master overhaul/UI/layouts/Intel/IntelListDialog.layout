@@ -1,0 +1,331 @@
+OverlayWidgetClass {
+ Name "rootFrame"
+ {
+  BlurWidgetClass "{6A5728551F8CBFC0}" {
+   Name "Blur0"
+   Slot OverlayWidgetSlot "{6A5728551F8CBFEE}" {
+   }
+  }
+  SizeLayoutWidgetClass "{6A5728551C37ABF0}" {
+   Name "RootWindow"
+   Slot OverlayWidgetSlot "{6A5728551C37AB95}" {
+   }
+   AllowWidthOverride 1
+   WidthOverride 1200
+   MaxDesiredWidth 1200
+   AllowHeightOverride 1
+   HeightOverride 800
+   {
+    VerticalLayoutWidgetClass "{6A572856D32D4C5B}" {
+     Name "VerticalLayout0"
+     Slot AlignableSlot "{6A572856D32D4C78}" {
+      VerticalAlign 0
+     }
+     {
+      SizeLayoutWidgetClass "{6A617EFA533DF5DB}" {
+       Name "HeaderFrame"
+       Slot LayoutSlot "{6A1E47849FBAE34A}" {
+        HorizontalAlign 1
+        VerticalAlign 1
+        FillWeight 2
+       }
+       AllowWidthOverride 1
+       WidthOverride 1200
+       {
+        OverlayWidgetClass "{6A617EFA533DF5DD}" {
+         Name "Overlay0"
+         Slot AlignableSlot "{6A1E478867DBF6B7}" {
+         }
+         {
+          ImageWidgetClass "{6A617EFA533DF5DE}" {
+           Name "BG"
+           Slot OverlayWidgetSlot "{6A1E478816F8D8F0}" {
+           }
+           Color 0.0343 0.0666 0.0369 1
+           Size 1200 50
+          }
+          TextWidgetClass "{6A617EFA533DF5DF}" {
+           Name "Text0"
+           Slot OverlayWidgetSlot "{6A1E478837E5DB3E}" {
+            HorizontalAlign 0
+            Padding 20 0 0 0
+           }
+           Color 0.7991 0.8148 0.7913 1
+           Text "COLLECTED INTEL"
+           FontProperties FontProperties "{6A1E478823D72234}" {
+            Font "{EABA4FE9D014CCEF}UI/Fonts/RobotoCondensed/RobotoCondensed_Bold.fnt"
+            Bold 1
+           }
+          }
+          ImageWidgetClass "{6A617EFB96EFD86C}" {
+           Name "Image0"
+           Slot OverlayWidgetSlot "{6A617EFB96EFD80F}" {
+            HorizontalAlign 2
+            Padding 0 0 20 0
+           }
+           Texture "{E48C8B4F48E2F427}UI/PH_Logo_2.edds"
+           Size 50 50
+          }
+         }
+        }
+       }
+      }
+      OverlayWidgetClass "{6A617EFBC6C11A10}" {
+       Name "BodyFrame"
+       Slot LayoutSlot "{6A1E4789F9A18DC7}" {
+        SizeMode Fill
+       }
+       {
+        ImageWidgetClass "{6A617EFBC6C11A12}" {
+         Name "BG"
+         Slot OverlayWidgetSlot "{6A1E4789832B2F93}" {
+         }
+         Color 0.0052 0.0091 0.0144 1
+         Size 1200 750
+        }
+        HorizontalLayoutWidgetClass "{6A617EFB539963B6}" {
+         Name "HorizontalLayout0"
+         Slot OverlayWidgetSlot "{6A617EFB53996352}" {
+          HorizontalAlign 3
+         }
+         {
+          OverlayWidgetClass "{6A617EFB3DC7DF59}" {
+           Name "IntelList"
+           Slot LayoutSlot "{6A617EFB3DC7DF63}" {
+            Padding 40 0 0 0
+           }
+           {
+            ImageWidgetClass "{6A617EFB22AC3F61}" {
+             Name "BG01"
+             Slot OverlayWidgetSlot "{6A617EFB22AC3F00}" {
+             }
+             Color 0.0185 0.0252 0.0319 1
+             Size 425 650
+            }
+            ScrollLayoutWidgetClass "{6A617EF85DA5717E}" {
+             Name "ScrollLayout0"
+             Slot OverlayWidgetSlot "{6A617EF85DA57126}" {
+              HorizontalAlign 3
+              VerticalAlign 3
+             }
+             {
+              VerticalLayoutWidgetClass "{6A617EF8435A99A5}" {
+               Name "TabListArea"
+               Slot AlignableSlot "{6A617EF8435A9950}" {
+                HorizontalAlign 3
+                VerticalAlign 3
+                Padding 10 10 10 10
+               }
+              }
+             }
+            }
+           }
+          }
+          ImageWidgetClass "{6A617EF95F8E4242}" {
+           Name "Image0"
+           Slot LayoutSlot "{6A617EF95F8E4204}" {
+            VerticalAlign 1
+            Padding 40 0 40 0
+           }
+           Size 5 500
+          }
+          OverlayWidgetClass "{6A617EF9025E77DC}" {
+           Name "Overlay0"
+           Slot LayoutSlot "{6A617EF9025E7798}" {
+            SizeMode Fill
+           }
+           {
+            ImageWidgetClass "{6A617EF9096C0333}" {
+             Name "BG02"
+             Slot OverlayWidgetSlot "{6A617EF9096C04DE}" {
+             }
+             Color 0.0185 0.0252 0.0319 1
+             Size 600 650
+            }
+            VerticalLayoutWidgetClass "{6A617EFE4F368EC8}" {
+             Name "VerticalLayout0"
+             Slot OverlayWidgetSlot "{6A617EFE4F368EED}" {
+              HorizontalAlign 3
+              VerticalAlign 3
+             }
+             {
+              HorizontalLayoutWidgetClass "{6A617EFE4B6D9173}" {
+               Name "HorizontalLayout0"
+               Slot LayoutSlot "{6A617EFE4B6D9110}" {
+                HorizontalAlign 0
+                VerticalAlign 1
+                Padding 25 25 0 0
+               }
+               {
+                TextWidgetClass "{6A617EFE7F43FE8D}" {
+                 Name "Intel_Title"
+                 Slot LayoutSlot "{6A617EFE7F43FEA0}" {
+                 }
+                 Text "Intel Title:"
+                 "Font Size" 30
+                 FontProperties FontProperties "{6A617EFE0AF57D68}" {
+                  Font "{CD2634D279AB011A}UI/Fonts/Roboto/Roboto_Bold.fnt"
+                 }
+                }
+                TextWidgetClass "{6A617EFE3BA49B83}" {
+                 Name "Title_Text"
+                 Slot LayoutSlot "{6A617EFE7F43FEA0}" {
+                  Padding 15 0 0 0
+                 }
+                 Text "Title Text"
+                 "Font Size" 30
+                 FontProperties FontProperties "{6A617EFE0AF57D68}" {
+                  Font "{E2CBA6F76AAA42AF}UI/Fonts/Roboto/Roboto_Regular.fnt"
+                 }
+                }
+               }
+              }
+              HorizontalLayoutWidgetClass "{6A617EFF7397CA3C}" {
+               Name "HorizontalLayout1"
+               Slot LayoutSlot "{6A617EFE4B6D9110}" {
+                HorizontalAlign 0
+                VerticalAlign 1
+                Padding 25 25 0 0
+               }
+               {
+                TextWidgetClass "{6A617EFF7397CA3D}" {
+                 Name "Intel_Type"
+                 Slot LayoutSlot "{6A617EFE7F43FEA0}" {
+                 }
+                 Text "Intel Type:"
+                 "Font Size" 25
+                 FontProperties FontProperties "{6A617EFE0AF57D68}" {
+                  Font "{CD2634D279AB011A}UI/Fonts/Roboto/Roboto_Bold.fnt"
+                 }
+                }
+                TextWidgetClass "{6A617EFF7397CA3F}" {
+                 Name "Type_Text"
+                 Slot LayoutSlot "{6A617EFE7F43FEA0}" {
+                  Padding 15 0 0 0
+                 }
+                 Text "Document"
+                 "Font Size" 25
+                 FontProperties FontProperties "{6A617EFE0AF57D68}" {
+                  Font "{E2CBA6F76AAA42AF}UI/Fonts/Roboto/Roboto_Regular.fnt"
+                 }
+                }
+               }
+              }
+              HorizontalLayoutWidgetClass "{6A617EFF33644105}" {
+               Name "HorizontalLayout2"
+               Slot LayoutSlot "{6A617EFE4B6D9110}" {
+                HorizontalAlign 0
+                VerticalAlign 1
+                Padding 25 25 0 0
+               }
+               {
+                TextWidgetClass "{6A617EFF33644106}" {
+                 Name "Intel_Description"
+                 Slot LayoutSlot "{6A617EFE7F43FEA0}" {
+                 }
+                 Text "Intel Description:"
+                 "Font Size" 25
+                 FontProperties FontProperties "{6A617EFE0AF57D68}" {
+                  Font "{CD2634D279AB011A}UI/Fonts/Roboto/Roboto_Bold.fnt"
+                 }
+                }
+               }
+              }
+              ScrollLayoutWidgetClass "{6A617EFDDABF08B6}" {
+               Name "ScrollLayout0"
+               Slot LayoutSlot "{6A617EFDDABF0850}" {
+                Padding 25 25 25 25
+                SizeMode Fill
+               }
+               {
+                RichTextWidgetClass "{6A617EFDA55B406C}" {
+                 Name "IntelBodyText"
+                 Slot AlignableSlot "{6A617EFDA55B400D}" {
+                  HorizontalAlign 3
+                  VerticalAlign 3
+                 }
+                 "Font Size" 18
+                 "Min Font Size" 18
+                 Wrap 1
+                 MaxDesiredWidth 600
+                 FontProperties FontProperties "{6A617EFD3E99B15F}" {
+                  Font "{E2CBA6F76AAA42AF}UI/Fonts/Roboto/Roboto_Regular.fnt"
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+      SizeLayoutWidgetClass "{6A617EF2551E2B72}" {
+       Name "FooterFrame"
+       Slot LayoutSlot "{6A1E478AAC77D04B}" {
+       }
+       AllowWidthOverride 1
+       WidthOverride 600
+       AllowHeightOverride 1
+       HeightOverride 40
+       {
+        OverlayWidgetClass "{6A617EF2551E2B71}" {
+         Name "Overlay0"
+         Slot AlignableSlot "{6A1E478B72EFF464}" {
+          HorizontalAlign 3
+         }
+         {
+          ImageWidgetClass "{6A617EF2551E2B70}" {
+           Name "BG"
+           Slot OverlayWidgetSlot "{6A1E478B7B0C6ADC}" {
+            HorizontalAlign 3
+            VerticalAlign 3
+           }
+           Color 0.0052 0.0091 0.0144 1
+           Size 600 40
+          }
+          HorizontalLayoutWidgetClass "{6A617EF2551EFC2B}" {
+           Name "HorizontalLayout0"
+           Slot OverlayWidgetSlot "{6A1E478B1F5E931B}" {
+            HorizontalAlign 0
+           }
+           {
+            ButtonWidgetClass "{6A617EF2551EFC2D}" : "{08CF3B69CB1ACBC4}UI/layouts/WidgetLibrary/Buttons/WLib_NavigationButton.layout" {
+             Name "CloseButton0"
+             Slot LayoutSlot "{6A1E478EBA6FA582}" {
+              HorizontalAlign 3
+              VerticalAlign 3
+              Padding 10 0 20 10
+             }
+             components {
+              SCR_InputButtonComponent "{5D346C3DD81D95CD}" {
+               m_sActionName "MenuBack"
+               m_sLabel "Close"
+              }
+             }
+             {
+              HorizontalLayoutWidgetClass "{5DB89B776AA9CEFF}" {
+               Prefab "{5DB89B776AA9CEFF}"
+               {
+                RichTextWidgetClass "{5DB89B776317E2A7}" {
+                 Prefab "{5DB89B776317E2A7}"
+                 Text "Close"
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}
