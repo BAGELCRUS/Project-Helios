@@ -1,0 +1,17 @@
+ImageSetClass {
+ RefSize 1544 1544
+ Textures {
+  ImageSetTextureClass "{6A6B184A052F15CD}" {
+   screenSize FHD
+   size 1544 1544
+   path "{D30232DED3A81BEE}Assets/UI/Folder_Icon-100_atlas.edds"
+  }
+ }
+ Images {
+  ImageSetDefClass Folder_Icon {
+   Pos 2 2
+   Size 1536 1536
+   Flags 0 0
+  }
+ }
+}

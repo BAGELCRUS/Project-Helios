@@ -1,0 +1,56 @@
+$grp GenericEntity : "{5256290A5C99C729}Prefabs/Props/Military/AmmoBoxes/EquipmentBoxStack/US/EquipmentBoxStack_US_01__intel_Test.et" {
+ {
+  components {
+   ATHENA_IntelComponent "{6A1D70B3F76B5937}" {
+    m_sIntelTitle "Confidential Intel 01"
+    m_sIntelType "Document"
+    m_sIntelDescription "dkdlfkfjdflfkjdflfkjdflf ldkffjld;dkfj d;lkffjdl;fkfj dlf;kjdf;lkj df"\
+    "dlkljdhfdkfj;ldkffjd;lfkjddf;lkjdlf;fkjdflkjdfl;dkffjldkfjdlfjklkdjdlkjddflkjdfldkffldfkjdff"\
+    "fldkdfj;lddkfj;dldfkfdkldfjldfkdflkdf flkdkfjldf dkdfjdf kdfll;f df "\
+    "fkjf;fdflkdjflf fdkffj dflkdf"\
+    ""\
+    ""\
+    ""\
+    "dfklfjd;flkjfdl;kdjffl;dkfjdld;fkfjddf dlkfjld;kf jlfkjdlf kj fdf;lkf fj; kdf lddfk  jj fl;kdjdf"\
+    ""\
+    "dl;ffkjddlfkj "\
+    "dfdklfjdf"\
+    "dfkdjdflkdjflkfjdf"\
+    "dfk'djf"\
+    "fdkffd"\
+    "fdkfjdflkdjf;ldkf"\
+    "fd'f"\
+    "d"\
+    ""\
+    "dfkjdflk;jdfldkfjldfijdlfkjdfldkfjldkfj'dfkljdf"\
+    "df;ldkf'dlfkjd;lfkdjf;lkdfjd'fk"\
+    "djfkldfjfd;lkfjdfkljdf;lkdjfldkfjdlfkjdflkdjfjfoijroirjfodifjldkfjjdiofjdf"\
+    "dfkjflkdfj;ldf"
+   }
+  }
+  coords 1352.644 39 2130.887
+  angles 0 -35.443 0
+ }
+ {
+  components {
+   ATHENA_IntelComponent "{6A1D70B3F76B5937}" {
+    m_sIntelTitle "Confidential Intel 02"
+    m_sIntelType "Computer"
+   }
+  }
+  coords 1355.308 39 2132.788
+  angles 0 -35.443 0
+ }
+ {
+  components {
+   ATHENA_IntelComponent "{6A1D70B3F76B5937}" {
+    m_sIntelTitle "Confidential Intel 03"
+    m_sIntelType "nothing"
+    m_sIntelDescription "dljfnlkcjdnekmfv;cfjdnmkfvlfoccnjx mfvfl,ocjinjxx mdfdlgv;bvojiodhujenfrkmfgvopjiohduejnfrkmgfkovdjidenfkrmfglkobkvjdidoenfkrmfglbpovokjdieonefkrmfgolvlvkdjdioenjfrfkmfgbokfjidoenkfmrgvojiddnejfkfmvopjidondejfrfkmlvkodjiodehnjfkmvopdjiodhenjfrfkmgfopdjdidenfrfkmgbkofjdhenjfkgmbkofvjidonffkrgmbojvifhduoejnfkfmrgfokbfjvihudejnfkmgbkopjvfhduodbjnfklvmkojdhenjfkvlmjhdubjffngkbmopvfjdhidoeufjnfvkgbmopjihdocujbnfkvmojfichoudjnfkvmgbvpjifhounjfkvmgbokvjihonefjfrfgvb"
+    m_fActionDuration 0
+   }
+  }
+  coords 1358.146 39 2134.752
+  angles 0 -35.443 0
+ }
+}

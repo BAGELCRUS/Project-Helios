@@ -2,8 +2,8 @@ SCR_PlayerController {
  ID "1A9BA6BEFA06E3B1"
  components {
   ATHENA_PlayerIntelComponent "{6A56AABCC40EB2A3}" {
-   m_sIconImageset "{F7E8D4834A3AFF2F}UI/Imagesets/Conflict/conflict-icons-bw.imageset"
-   m_sIconName "Armory_HUD"
+   m_sIconImageset "{4088A2EEECEE83FD}UI/Imageset/Icons/Folder_Icon.imageset"
+   m_sIconName "Folder_Icon"
   }
  }
 }
