@@ -140,6 +140,17 @@ class ATHENA_PlayerIntelComponent : ScriptComponent
 		SCR_MapToolMenuUI toolMenu = SCR_MapToolMenuUI.Cast(mapEnt.GetMapUIComponent(SCR_MapToolMenuUI));
 		if (toolMenu)
 		{
+			// Prevent duplicates when map is reopened
+			array<ref SCR_MapToolEntry> entries = toolMenu.GetMenuEntries();
+			if (entries)
+			{
+				foreach (SCR_MapToolEntry entry : entries)
+				{
+					if (entry == m_IntelToolEntry)
+						return; // Already registered
+				}
+			}
+
 			// 100 is sort priority
 			m_IntelToolEntry = toolMenu.RegisterToolMenuEntry(m_sIconImageset, m_sIconName, 100);
 			if (m_IntelToolEntry)
