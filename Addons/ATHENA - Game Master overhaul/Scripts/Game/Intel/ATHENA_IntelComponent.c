@@ -133,7 +133,14 @@ class ATHENA_IntelComponent : ScriptComponent
 	// Networking logic for pings
 	void RequestPing(bool pingGM, EAthenaIntelShareType shareType, string title, string type, string description, int playerId)
 	{
-		Rpc(RpcDo_PingServer, pingGM, shareType, title, type, description, playerId);
+		if (Replication.IsServer())
+		{
+			RpcDo_PingServer(pingGM, shareType, title, type, description, playerId);
+		}
+		else
+		{
+			Rpc(RpcDo_PingServer, pingGM, shareType, title, type, description, playerId);
+		}
 	}
 	
 	[RplRpc(RplChannel.Reliable, RplRcver.Server)]
@@ -147,6 +154,8 @@ class ATHENA_IntelComponent : ScriptComponent
 		
 		if (pingGM)
 		{
+			string pName = GetGame().GetPlayerManager().GetPlayerName(playerId);
+			Print("ATHENA_IntelComponent Server: Broadcasting GM Ping for player " + pName, LogLevel.NORMAL);
 			// Ping GM separately (true flag)
 			Rpc(RpcDo_ShowHintClient, title, type, description, true, EAthenaIntelShareType.Nobody, playerId);
 		}
@@ -160,10 +169,16 @@ class ATHENA_IntelComponent : ScriptComponent
 		if (gmOnly)
 		{
 			SCR_EditorManagerEntity editorManager = SCR_EditorManagerEntity.GetInstance();
-			if (!editorManager || !editorManager.IsOpened())
+			if (!editorManager)
 				return;
 			
-			SCR_HintManagerComponent.GetInstance().ShowCustomHint(string.Format("Intel '%1' was collected", title), "Intel Collected", 10.0, false);
+			string playerName = GetGame().GetPlayerManager().GetPlayerName(sourcePlayerId);
+			if (playerName == string.Empty) playerName = "Unknown Player";
+			
+			string msg = string.Format("%1 Has collected Intel", playerName);
+			Print("ATHENA_IntelComponent GM Client: " + msg + " (" + title + ")", LogLevel.NORMAL);
+			
+			SCR_HintManagerComponent.GetInstance().ShowCustomHint(msg, title, 10.0, false);
 			return;
 		}
 		
