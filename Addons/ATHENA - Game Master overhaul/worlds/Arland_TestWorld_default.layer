@@ -26,6 +26,8 @@ $grp GenericEntity : "{5256290A5C99C729}Prefabs/Props/Military/AmmoBoxes/Equipme
     "df;ldkf'dlfkjd;lfkdjf;lkdfjd'fk"\
     "djfkldfjfd;lkfjdfkljdf;lkdjfldkfjdlfkjdflkdjfjfoijroirjfodifjldkfjjdiofjdf"\
     "dfkjflkdfj;ldf"
+    m_ShareType Group
+    m_fActionDuration 0
    }
   }
   coords 1352.644 39 2130.887
@@ -36,6 +38,8 @@ $grp GenericEntity : "{5256290A5C99C729}Prefabs/Props/Military/AmmoBoxes/Equipme
    ATHENA_IntelComponent "{6A1D70B3F76B5937}" {
     m_sIntelTitle "Confidential Intel 02"
     m_sIntelType "Computer"
+    m_ShareType Everyone
+    m_fActionDuration 0
    }
   }
   coords 1355.308 39 2132.788
@@ -47,6 +51,7 @@ $grp GenericEntity : "{5256290A5C99C729}Prefabs/Props/Military/AmmoBoxes/Equipme
     m_sIntelTitle "Confidential Intel 03"
     m_sIntelType "nothing"
     m_sIntelDescription "dljfnlkcjdnekmfv;cfjdnmkfvlfoccnjx mfvfl,ocjinjxx mdfdlgv;bvojiodhujenfrkmfgvopjiohduejnfrkmgfkovdjidenfkrmfglkobkvjdidoenfkrmfglbpovokjdieonefkrmfgolvlvkdjdioenjfrfkmfgbokfjidoenkfmrgvojiddnejfkfmvopjidondejfrfkmlvkodjiodehnjfkmvopdjiodhenjfrfkmgfopdjdidenfrfkmgbkofjdhenjfkgmbkofvjidonffkrgmbojvifhduoejnfkfmrgfokbfjvihudejnfkmgbkopjvfhduodbjnfklvmkojdhenjfkvlmjhdubjffngkbmopvfjdhidoeufjnfvkgbmopjihdocujbnfkvmojfichoudjnfkvmgbvpjifhounjfkvmgbokvjihonefjfrfgvb"
+    m_ShareType Faction
     m_fActionDuration 0
    }
   }

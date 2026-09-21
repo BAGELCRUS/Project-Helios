@@ -8,7 +8,7 @@ class ATHENA_PlayerIntelComponent : ScriptComponent
 	protected ref array<ref ATHENA_IntelData> m_aCollectedIntel = new array<ref ATHENA_IntelData>();
 
 	// Add Intel locally
-	void AddIntelLocal(string title, string type, string description, string method = "Collected")
+	void AddIntelLocal(string title, string type, string description, string method = "Collected", EAthenaIntelShareType shareType = EAthenaIntelShareType.Individual)
 	{
 		// Avoid duplicates by checking title
 		foreach (ATHENA_IntelData intel : m_aCollectedIntel)
@@ -19,7 +19,7 @@ class ATHENA_PlayerIntelComponent : ScriptComponent
 		
 		string timeStr = GetCurrentGameTimeFormatted();
 		
-		ATHENA_IntelData newIntel = new ATHENA_IntelData(title, type, description, false, method, timeStr);
+		ATHENA_IntelData newIntel = new ATHENA_IntelData(title, type, description, shareType, method, timeStr);
 		m_aCollectedIntel.Insert(newIntel);
 	}
 	

@@ -92,9 +92,9 @@ class ATHENA_IntelWorldAction : ScriptedUserAction
 		{
 			// Add intel to the local player's component immediately
 			ATHENA_PlayerIntelComponent pic = ATHENA_PlayerIntelComponent.GetLocalInstance();
-			if (pic)
+			if (pic && m_IntelComp.GetShareType() != EAthenaIntelShareType.Nobody)
 			{
-				pic.AddIntelLocal(title, type, description);
+				pic.AddIntelLocal(title, type, description, "Collected", m_IntelComp.GetShareType());
 				Print("ATHENA_IntelWorldAction: Added intel '" + title + "' to local player's component.", LogLevel.NORMAL);
 			}
 

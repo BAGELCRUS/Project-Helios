@@ -1,8 +1,10 @@
 enum EAthenaIntelShareType
 {
 	Nobody,
+	Individual,
 	Group,
-	Faction
+	Faction,
+	Everyone
 }
 
 [ComponentEditorProps(category: "GameScripted/Intel", description: "Component to store intel information and settings.")]
@@ -138,11 +140,8 @@ class ATHENA_IntelComponent : ScriptComponent
 	protected void RpcDo_PingServer(bool pingGM, EAthenaIntelShareType shareType, string title, string type, string description, int playerId)
 	{
 		// Notify clients depending on ShareType
-		// Currently only basic support for Nobody/Group/Faction
-		if (shareType != EAthenaIntelShareType.Nobody)
+		if (shareType == EAthenaIntelShareType.Group || shareType == EAthenaIntelShareType.Faction || shareType == EAthenaIntelShareType.Everyone)
 		{
-			// Simplification: In a full implementation, we'd iterate over faction/group members.
-			// For now, we will broadcast and let clients filter.
 			Rpc(RpcDo_ShowHintClient, title, type, description, false, shareType, playerId);
 		}
 		
@@ -168,7 +167,7 @@ class ATHENA_IntelComponent : ScriptComponent
 			return;
 		}
 		
-		// For Faction/Group logic:
+		// For Faction/Group/Everyone logic:
 		if (shareType == EAthenaIntelShareType.Faction)
 		{
 			SCR_FactionManager factionManager = SCR_FactionManager.Cast(GetGame().GetFactionManager());
@@ -191,11 +190,20 @@ class ATHENA_IntelComponent : ScriptComponent
 					return; // Not same group
 			}
 		}
+		else if (shareType == EAthenaIntelShareType.Everyone)
+		{
+			// Everyone gets it, no filtering needed
+		}
+		else 
+		{
+			// Nobody or Individual shouldn't trigger this broadcast
+			return;
+		}
 
 		ATHENA_PlayerIntelComponent pic = ATHENA_PlayerIntelComponent.GetLocalInstance();
 		if (pic)
 		{
-			pic.AddIntelLocal(title, type, description, "Received");
+			pic.AddIntelLocal(title, type, description, "Received", shareType);
 		}
 
 		SCR_HintManagerComponent.GetInstance().ShowCustomHint(title, "Intel Discovered", 10.0, false);

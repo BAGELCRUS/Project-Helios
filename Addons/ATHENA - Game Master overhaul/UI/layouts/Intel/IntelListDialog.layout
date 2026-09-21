@@ -107,7 +107,6 @@ OverlayWidgetClass {
             }
             ScrollLayoutWidgetClass "{6A617EF85DA5717E}" {
              Name "ScrollLayout0"
-             ClipChildren 1
              Slot OverlayWidgetSlot "{6A617EF85DA57126}" {
               HorizontalAlign 3
               VerticalAlign 3
@@ -239,11 +238,12 @@ OverlayWidgetClass {
               }
               ScrollLayoutWidgetClass "{6A617EFDDABF08B6}" {
                Name "ScrollLayout0"
-               ClipChildren 1
                Slot LayoutSlot "{6A617EFDDABF0850}" {
                 Padding 25 25 25 25
+                SizeMode Fill
                }
                Clipping False
+               "Scrollbar Always Visible" 1
                {
                 RichTextWidgetClass "{6A617EFDA55B406C}" {
                  Name "IntelBodyText"
@@ -251,6 +251,7 @@ OverlayWidgetClass {
                   HorizontalAlign 3
                   VerticalAlign 3
                  }
+                 Clipping True
                  "Font Size" 18
                  "Min Font Size" 18
                  Wrap 1

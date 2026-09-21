@@ -10,16 +10,16 @@ class ATHENA_IntelData
 	[Attribute("Top secret description...", UIWidgets.EditBoxMultiline)]
 	string m_sDescription;
 	
-	bool m_bIsShared;
+	EAthenaIntelShareType m_ShareType;
 	string m_sMethod;
 	string m_sTime;
 	
-	void ATHENA_IntelData(string title = "", string type = "", string description = "", bool isShared = false, string method = "Collected", string time = "")
+	void ATHENA_IntelData(string title = "", string type = "", string description = "", EAthenaIntelShareType shareType = EAthenaIntelShareType.Individual, string method = "Collected", string time = "")
 	{
 		m_sTitle = title;
 		m_sType = type;
 		m_sDescription = description;
-		m_bIsShared = isShared;
+		m_ShareType = shareType;
 		m_sMethod = method;
 		m_sTime = time;
 	}

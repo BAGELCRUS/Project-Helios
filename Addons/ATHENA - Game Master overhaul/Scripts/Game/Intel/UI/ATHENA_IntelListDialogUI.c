@@ -127,7 +127,7 @@ class ATHENA_IntelListDialogUI : SCR_ConfigurableDialogUi
 			// Handle SHARED text widget visibility
 			TextWidget sharedW = TextWidget.Cast(tabBtnWidget.FindAnyWidget("SHARED"));
 			if (sharedW)
-				sharedW.SetVisible(intel.m_bIsShared);
+				sharedW.SetVisible(intel.m_ShareType == EAthenaIntelShareType.Group || intel.m_ShareType == EAthenaIntelShareType.Faction || intel.m_ShareType == EAthenaIntelShareType.Everyone);
 
 			// Handle Method and TIME
 			TextWidget methodW = TextWidget.Cast(tabBtnWidget.FindAnyWidget("METHOOD"));
