@@ -299,6 +299,31 @@ OverlayWidgetClass {
             HorizontalAlign 0
            }
            {
+            ButtonWidgetClass "{1111111111111111}" : "{08CF3B69CB1ACBC4}UI/layouts/WidgetLibrary/Buttons/WLib_NavigationButton.layout" {
+             Name "ShareButton0"
+             Slot LayoutSlot "{1111111111111112}" {
+              HorizontalAlign 3
+              VerticalAlign 3
+              Padding 10 0 20 10
+             }
+             components {
+              SCR_InputButtonComponent "{1111111111111113}" {
+               m_sActionName "PlayerList"
+               m_sLabel "Share Nearby"
+              }
+             }
+             {
+              HorizontalLayoutWidgetClass "{1111111111111114}" {
+               Prefab "{5DB89B776AA9CEFF}"
+               {
+                RichTextWidgetClass "{1111111111111115}" {
+                 Prefab "{5DB89B776317E2A7}"
+                 Text "Share Nearby"
+                }
+               }
+              }
+             }
+            }
             ButtonWidgetClass "{6A617EF2551EFC2D}" : "{08CF3B69CB1ACBC4}UI/layouts/WidgetLibrary/Buttons/WLib_NavigationButton.layout" {
              Name "CloseButton0"
              Slot LayoutSlot "{6A1E478EBA6FA582}" {

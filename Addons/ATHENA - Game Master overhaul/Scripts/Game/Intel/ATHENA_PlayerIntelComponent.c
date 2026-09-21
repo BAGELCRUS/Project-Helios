@@ -23,6 +23,80 @@ class ATHENA_PlayerIntelComponent : ScriptComponent
 		m_aCollectedIntel.Insert(newIntel);
 	}
 	
+	void MarkIntelAsSharedLocal(string title)
+	{
+		foreach (ATHENA_IntelData intel : m_aCollectedIntel)
+		{
+			if (intel.m_sTitle == title)
+			{
+				intel.m_ShareType = EAthenaIntelShareType.Everyone; // Triggers UI SHARED icon
+				return;
+			}
+		}
+	}
+
+	void ShareIntelNearby(string title, string type, string description)
+	{
+		Print("ATHENA_PlayerIntelComponent: Requesting server to share Intel nearby. Title: " + title, LogLevel.NORMAL);
+		Rpc(RpcAsk_ShareIntelNearby, title, type, description);
+	}
+
+	[RplRpc(RplChannel.Reliable, RplRcver.Server)]
+	protected void RpcAsk_ShareIntelNearby(string title, string type, string description)
+	{
+		IEntity instigatorEntity = PlayerController.Cast(GetOwner()).GetControlledEntity();
+		if (!instigatorEntity) 
+		{
+			Print("ATHENA_PlayerIntelComponent Server: Instigator entity is null!", LogLevel.WARNING);
+			return;
+		}
+		
+		vector instigatorPos = instigatorEntity.GetOrigin();
+		Print("ATHENA_PlayerIntelComponent Server: Processing ShareIntelNearby request for Title: " + title + " from position: " + instigatorPos.ToString(), LogLevel.NORMAL);
+
+		PlayerManager playerManager = GetGame().GetPlayerManager();
+		if (!playerManager) return;
+		
+		array<int> players = new array<int>();
+		playerManager.GetPlayers(players);
+		int sharedCount = 0;
+
+		foreach (int playerId : players)
+		{
+			PlayerController pc = playerManager.GetPlayerController(playerId);
+			if (!pc || pc == GetOwner()) continue; // Skip self
+
+			IEntity targetEntity = pc.GetControlledEntity();
+			if (!targetEntity) continue;
+
+			float dist = vector.Distance(instigatorPos, targetEntity.GetOrigin());
+			if (dist <= 10.0) // 10m radius
+			{
+				Print("ATHENA_PlayerIntelComponent Server: Player " + playerId + " is in range (" + dist + "m). Sending intel.", LogLevel.NORMAL);
+				ATHENA_PlayerIntelComponent targetPic = ATHENA_PlayerIntelComponent.Cast(pc.FindComponent(ATHENA_PlayerIntelComponent));
+				if (targetPic)
+				{
+					targetPic.Rpc(targetPic.RpcDo_ReceiveSharedIntel, title, type, description);
+					sharedCount++;
+				}
+			}
+			else
+			{
+				Print("ATHENA_PlayerIntelComponent Server: Player " + playerId + " is out of range (" + dist + "m).", LogLevel.VERBOSE);
+			}
+		}
+		
+		Print("ATHENA_PlayerIntelComponent Server: Shared intel with " + sharedCount + " nearby players.", LogLevel.NORMAL);
+	}
+
+	[RplRpc(RplChannel.Reliable, RplRcver.Owner)]
+	protected void RpcDo_ReceiveSharedIntel(string title, string type, string description)
+	{
+		Print("ATHENA_PlayerIntelComponent Client: Received shared Intel. Title: " + title, LogLevel.NORMAL);
+		AddIntelLocal(title, type, description, "Received", EAthenaIntelShareType.Individual);
+		SCR_HintManagerComponent.GetInstance().ShowCustomHint(title, "Intel Shared by Nearby Player", 10.0, false);
+	}
+
 	string GetCurrentGameTimeFormatted()
 	{
 		ChimeraWorld world = ChimeraWorld.CastFrom(GetGame().GetWorld());

@@ -26,6 +26,7 @@ class ATHENA_IntelListDialogUI : SCR_ConfigurableDialogUi
 	protected TextWidget m_wTitleText;
 	protected TextWidget m_wTypeText;
 	protected RichTextWidget m_wDescriptionText;
+	protected ATHENA_IntelData m_SelectedIntel;
 
 	[Attribute("{E024DA643662834C}UI/layouts/Intel/IntelTabButton.layout", UIWidgets.ResourcePickerThumbnail, desc: "Prefab used for the tab buttons on the left")]
 	protected ResourceName m_sTabButtonPrefab;
@@ -70,10 +71,23 @@ class ATHENA_IntelListDialogUI : SCR_ConfigurableDialogUi
 			}
 		}
 
+		// Hook up the share button
+		Widget shareBtn = root.FindAnyWidget("ShareButton0");
+		if (shareBtn)
+		{
+			SCR_ButtonBaseComponent btnComp = SCR_ButtonBaseComponent.Cast(shareBtn.FindHandler(SCR_ButtonBaseComponent));
+			if (btnComp)
+			{
+				btnComp.m_OnClicked.Insert(OnShareClicked);
+			}
+		}
+
 		InputManager inputMgr = GetGame().GetInputManager();
 		if (inputMgr)
 		{
 			inputMgr.AddActionListener("MenuBack", EActionTrigger.DOWN, Close);
+			inputMgr.AddActionListener("PlayerList", EActionTrigger.DOWN, OnShareClicked);
+			inputMgr.AddActionListener("Inventory", EActionTrigger.DOWN, OnShareClicked);
 		}
 
 		PopulateTabs();
@@ -161,9 +175,23 @@ class ATHENA_IntelListDialogUI : SCR_ConfigurableDialogUi
 
 	void SelectIntel(ATHENA_IntelData intel)
 	{
+		m_SelectedIntel = intel;
 		if (m_wTitleText) m_wTitleText.SetText(intel.m_sTitle);
 		if (m_wTypeText) m_wTypeText.SetText(intel.m_sType);
 		if (m_wDescriptionText) m_wDescriptionText.SetText(intel.m_sDescription);
+	}
+
+	protected void OnShareClicked()
+	{
+		if (!m_SelectedIntel)
+			return;
+
+		ATHENA_PlayerIntelComponent pic = ATHENA_PlayerIntelComponent.GetLocalInstance();
+		if (pic)
+		{
+			pic.ShareIntelNearby(m_SelectedIntel.m_sTitle, m_SelectedIntel.m_sType, m_SelectedIntel.m_sDescription);
+			pic.MarkIntelAsSharedLocal(m_SelectedIntel.m_sTitle);
+		}
 	}
 
 	override void HandlerDeattached(Widget w)
@@ -173,6 +201,8 @@ class ATHENA_IntelListDialogUI : SCR_ConfigurableDialogUi
 		if (inputMgr)
 		{
 			inputMgr.RemoveActionListener("MenuBack", EActionTrigger.DOWN, Close);
+			inputMgr.RemoveActionListener("PlayerList", EActionTrigger.DOWN, OnShareClicked);
+			inputMgr.RemoveActionListener("Inventory", EActionTrigger.DOWN, OnShareClicked);
 		}
 	}
 }
