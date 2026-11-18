@@ -1,0 +1,12 @@
+GenericEntity {
+ ID "6AE35A9521D9DC8A"
+ components {
+  ATHENA_IntelSpawnerComponent "{6AE35A9569670006}" {
+  }
+  RplComponent "{6AE35A951404490D}" {
+  }
+  Hierarchy "{6AE35A95066E38D7}" {
+  }
+ }
+ coords 3.799 3.732 3.135
+}

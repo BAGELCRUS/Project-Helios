@@ -42,12 +42,23 @@ GenericEntity : "{37DA9B4DBC0427E5}Prefabs/Props/Military/AmmoBoxes/EquipmentBox
    }
   }
   ATHENA_IntelComponent "{6A1D70B3F76B5937}" {
-   m_sIntelType "DWDWDWD"
-   m_sActionText "Action"
+   m_sIntelType "Document"
+   m_sActionText "Read Intel"
    m_ActionSound "{951A2351637B9445}Sounds/Destruction/Buildings/Destruction_Buildings_Brick_Generic.acp"
    m_sActionSoundEventStart "SOUND_BUILDING_DESTRUCTION_PRESTART"
    m_sActionSoundEventEnd "SOUND_BUILDING_DESTRUCTION_END"
    m_fActionDuration 10
+  }
+  SCR_EditableEntityComponent "{6AE58B21CE701D80}" {
+   m_EntityType GENERIC
+   m_UIInfo SCR_EditableEntityUIInfo "{6AE58B21CE701D81}" {
+    Name "Intel Crate (Test)"
+    Icon "{8EE22446E2A8F05D}UI/Textures/Editor/Attributes/Categories/categories_support_station.edds"
+   }
+   m_Flags 71
+  }
+  RplComponent "{6AE58B21CE701D82}" {
+   Streamable Disabled
   }
  }
 }

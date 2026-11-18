@@ -1,0 +1,240 @@
+OverlayWidgetClass {
+ Name "rootFrame"
+ {
+  SizeLayoutWidgetClass "{6AE35A9D4E0E226F}" {
+   Name "RootWindow"
+   Slot OverlayWidgetSlot "{6A1E4784DB4E37DA}" {
+   }
+   AllowWidthOverride 1
+   WidthOverride 600
+   AllowHeightOverride 1
+   HeightOverride 800
+   {
+    VerticalLayoutWidgetClass "{6AE35A9D4E0E2211}" {
+     Name "VerticalLayout0"
+     Slot AlignableSlot "{6A1E4784FD451FBB}" {
+      VerticalAlign 0
+     }
+     {
+      SizeLayoutWidgetClass "{6AE35A9D4E0E2212}" {
+       Name "HeaderFrame"
+       Slot LayoutSlot "{6A1E47849FBAE34A}" {
+        HorizontalAlign 1
+        VerticalAlign 1
+        FillWeight 2
+       }
+       AllowWidthOverride 1
+       WidthOverride 600
+       {
+        OverlayWidgetClass "{6AE35A9D4E0E2213}" {
+         Name "Overlay0"
+         Slot AlignableSlot "{6A1E478867DBF6B7}" {
+         }
+         {
+          ImageWidgetClass "{6AE35A9D4E0E2215}" {
+           Name "BG"
+           Slot OverlayWidgetSlot "{6A1E478816F8D8F0}" {
+           }
+           Color 0.0343 0.0666 0.0369 1
+           Size 600 40
+          }
+          TextWidgetClass "{6AE35A9D4E0E2217}" {
+           Name "Text0"
+           Slot OverlayWidgetSlot "{6A1E478837E5DB3E}" {
+            HorizontalAlign 0
+            Padding 20 0 0 0
+           }
+           Color 0.7991 0.8148 0.7913 1
+           Text "Intel Module"
+           FontProperties FontProperties "{6A1E478823D72234}" {
+            Font "{EABA4FE9D014CCEF}UI/Fonts/RobotoCondensed/RobotoCondensed_Bold.fnt"
+            Bold 1
+           }
+          }
+         }
+        }
+       }
+      }
+      OverlayWidgetClass "{6AE35A9D4E0E2218}" {
+       Name "BodyFrame"
+       Slot LayoutSlot "{6A1E4789F9A18DC7}" {
+        SizeMode Fill
+       }
+       {
+        ImageWidgetClass "{6AE35A9D4E0E2219}" {
+         Name "BG"
+         Slot OverlayWidgetSlot "{6A1E4789832B2F93}" {
+         }
+         Color 0.0052 0.0091 0.0144 0.9804
+         Size 600 800
+        }
+        ImageWidgetClass "{6AE35A9D4E0E221A}" {
+         Name "Logo"
+         Slot OverlayWidgetSlot "{6A1E4789832B2F93}" {
+         }
+         Color 0 0 0 0.3646
+         Texture "{E48C8B4F48E2F427}UI/PH_Logo_2.edds"
+         Size 500 500
+        }
+        VerticalLayoutWidgetClass "{6AE35A9D4E0E221B}" {
+         Name "ContentStack"
+         Slot OverlayWidgetSlot "{6A1E478952FC3B3F}" {
+          HorizontalAlign 3
+          VerticalAlign 3
+          Padding 20 20 20 20
+         }
+         {
+          ScrollLayoutWidgetClass "{6AE35A9C90CF1675}" {
+           Name "ScrollLayout0"
+           Slot LayoutSlot "{6AE35A9C90CF1650}" {
+           }
+           {
+            VerticalLayoutWidgetClass "{6AE35A9803215FA4}" {
+             Name "VerticalLayout0"
+             Slot AlignableSlot "{6AE35A980A6A4E24}" {
+              HorizontalAlign 3
+              VerticalAlign 3
+             }
+             {
+              ButtonWidgetClass "{6AE36D8CDB03A8F2}" : "{0022F0B45ADBC5AC}UI/layouts/WidgetLibrary/EditBox/WLib_EditBox.layout" {
+               Name "TitleInput"
+               Slot LayoutSlot "{6AE36D8CDB03A8E0}" {
+                HorizontalAlign 3
+                Padding 4 4 4 4
+               }
+              }
+              ButtonWidgetClass "{6AE36D8CF5044232}" : "{97C4F8AF11039BCF}UI/layouts/WidgetLibrary/EditBox/WLib_EditBoxMultiline.layout" {
+               Name "DescriptionInput"
+               Slot LayoutSlot "{6AE36D8CF504423E}" {
+                HorizontalAlign 3
+                Padding 4 4 4 4
+               }
+              }
+              ButtonWidgetClass "{6AE35A9B80DBBBC0}" : "{4B5AE6E64037FFB4}UI/layouts/WidgetLibrary/ComboBox/WLib_ComboBox.layout" {
+               Name "PrefabSelect"
+               Slot LayoutSlot "{6AE35A9B80DBBB20}" {
+                HorizontalAlign 3
+                Padding 4 4 4 4
+               }
+              }
+              ButtonWidgetClass "{6AE35A9B80DBBBCD}" : "{4B5AE6E64037FFB4}UI/layouts/WidgetLibrary/ComboBox/WLib_ComboBox.layout" {
+               Name "TypeSelect"
+               Slot LayoutSlot "{6AE35A9B80DBBB21}" {
+                HorizontalAlign 3
+                Padding 4 4 4 4
+               }
+              }
+              ButtonWidgetClass "{6AE35A9B01186251}" : "{0022F0B45ADBC5AC}UI/layouts/WidgetLibrary/EditBox/WLib_EditBox.layout" {
+               Name "ActionTextInput"
+               Slot LayoutSlot "{6AE35A983DB5EF29}" {
+                HorizontalAlign 3
+                Padding 4 4 4 4
+               }
+              }
+              ButtonWidgetClass "{6AE35A9A9E143D64}" : "{4A41296C0E9A889F}UI/layouts/WidgetLibrary/WLib_Slider.layout" {
+               Name "ActionDurationInput"
+               Slot LayoutSlot "{6AE35A9A9E143D59}" {
+                HorizontalAlign 3
+                Padding 4 4 4 4
+               }
+              }
+              ButtonWidgetClass "{6AE35A9B1FF5E01F}" : "{5D5055E10FD00549}UI/layouts/WidgetLibrary/ToolBoxes/WLib_Checkbox.layout" {
+               Name "DeleteOnCompletionInput"
+               Slot LayoutSlot "{6AE35A9B6F017E72}" {
+                HorizontalAlign 3
+                Padding 2 2 2 2
+               }
+              }
+              ButtonWidgetClass "{6AE35A9BA1282F87}" : "{4B5AE6E64037FFB4}UI/layouts/WidgetLibrary/ComboBox/WLib_ComboBox.layout" {
+               Name "ShareTypeSelect"
+               Slot LayoutSlot "{6AE35A9BA1282FEB}" {
+                HorizontalAlign 3
+                Padding 4 4 4 4
+               }
+              }
+              ButtonWidgetClass "{6AE35A9AF6EAB3DE}" : "{4B5AE6E64037FFB4}UI/layouts/WidgetLibrary/ComboBox/WLib_ComboBox.layout" {
+               Name "ActionSoundSelect"
+               Slot LayoutSlot "{6AE35A9BA1282FEB}" {
+                HorizontalAlign 3
+                Padding 4 4 4 4
+               }
+              }
+              ButtonWidgetClass "{6AE35A9B6F017E01}" : "{5D5055E10FD00549}UI/layouts/WidgetLibrary/ToolBoxes/WLib_Checkbox.layout" {
+               Name "PingGMInput"
+               Slot LayoutSlot "{6AE35A9B6F017E72}" {
+                HorizontalAlign 3
+                Padding 2 2 2 2
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+      SizeLayoutWidgetClass "{6AE35A9D4E0E52CF}" {
+       Name "FooterFrame"
+       Slot LayoutSlot "{6A1E478AAC77D04B}" {
+       }
+       AllowWidthOverride 1
+       WidthOverride 600
+       AllowHeightOverride 1
+       HeightOverride 40
+       {
+        OverlayWidgetClass "{6AE35A9D4E0E52C0}" {
+         Name "Overlay0"
+         Slot AlignableSlot "{6A1E478B72EFF464}" {
+         }
+         {
+          ImageWidgetClass "{6AE35A9D4E0E52C1}" {
+           Name "BG"
+           Slot OverlayWidgetSlot "{6A1E478B7B0C6ADC}" {
+           }
+           Color 0.0052 0.0091 0.0144 0.9804
+           Size 600 40
+          }
+          HorizontalLayoutWidgetClass "{6AE35A9D4E0E6768}" {
+           Name "HorizontalLayout0"
+           Slot OverlayWidgetSlot "{6A1E478B1F5E931B}" {
+            HorizontalAlign 0
+           }
+           {
+            ButtonWidgetClass "{6AE35A9D4E0E676A}" : "{08CF3B69CB1ACBC4}UI/layouts/WidgetLibrary/Buttons/WLib_NavigationButton.layout" {
+             Name "CloseButton0"
+             Slot LayoutSlot "{6A1E478EBA6FA582}" {
+              HorizontalAlign 3
+              VerticalAlign 3
+              Padding 10 0 20 10
+             }
+             components {
+              SCR_InputButtonComponent "{5D346C3DD81D95CD}" {
+               m_sActionName "MenuBack"
+               m_sLabel "Close"
+              }
+             }
+             {
+              HorizontalLayoutWidgetClass "{5DB89B776AA9CEFF}" {
+               Prefab "{5DB89B776AA9CEFF}"
+               {
+                RichTextWidgetClass "{5DB89B776317E2A7}" {
+                 Prefab "{5DB89B776317E2A7}"
+                 Text "Close"
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}

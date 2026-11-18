@@ -14,37 +14,37 @@ class ATHENA_IntelComponentClass : ScriptComponentClass
 
 class ATHENA_IntelComponent : ScriptComponent
 {
-	[Attribute("Confidential Intel", UIWidgets.EditBox, desc: "Title of the Intel displayed in the UI.", category: "Intel Settings")]
+	[Attribute("Confidential Intel", UIWidgets.EditBox, desc: "Title of the Intel displayed in the UI.", category: "Intel Settings"), RplProp()]
 	protected string m_sIntelTitle;
 
-	[Attribute("Document", UIWidgets.EditBox, desc: "Type of the Intel (e.g. Document, Map, Radio).", category: "Intel Settings")]
+	[Attribute("Document", UIWidgets.EditBox, desc: "Type of the Intel (e.g. Document, Map, Radio).", category: "Intel Settings"), RplProp()]
 	protected string m_sIntelType;
 
-	[Attribute("Top secret description...", UIWidgets.EditBoxMultiline, desc: "Description of the Intel displayed in the UI.", category: "Intel Settings")]
+	[Attribute("Top secret description...", UIWidgets.EditBoxMultiline, desc: "Description of the Intel displayed in the UI.", category: "Intel Settings"), RplProp()]
 	protected string m_sIntelDescription;
 
-	[Attribute("0", UIWidgets.ComboBox, desc: "Who should receive a notification when this is opened?", enums: ParamEnumArray.FromEnum(EAthenaIntelShareType), category: "Intel Settings")]
+	[Attribute("0", UIWidgets.ComboBox, desc: "Who should receive a notification when this is opened?", enums: ParamEnumArray.FromEnum(EAthenaIntelShareType), category: "Intel Settings"), RplProp()]
 	protected EAthenaIntelShareType m_ShareType;
 
-	[Attribute("false", UIWidgets.CheckBox, desc: "Should picking up this intel ping the Game Master?", category: "Intel Settings")]
+	[Attribute("false", UIWidgets.CheckBox, desc: "Should picking up this intel ping the Game Master?", category: "Intel Settings"), RplProp()]
 	protected bool m_bPingGM;
 
-	[Attribute("false", UIWidgets.CheckBox, desc: "Should this intel item be deleted from the world after it is opened?", category: "Intel Settings")]
+	[Attribute("false", UIWidgets.CheckBox, desc: "Should this intel item be deleted from the world after it is opened?", category: "Intel Settings"), RplProp()]
 	protected bool m_bDeleteOnCompletion;
 
-	[Attribute("Read Intel", UIWidgets.EditBox, desc: "Action text shown to the player.", category: "Intel Settings")]
+	[Attribute("Read Intel", UIWidgets.EditBox, desc: "Action text shown to the player.", category: "Intel Settings"), RplProp()]
 	protected string m_sActionText;
 
-	[Attribute("", UIWidgets.ResourcePickerThumbnail, desc: "Action sound played upon completion", params: "acp", category: "Intel Settings")]
+	[Attribute("", UIWidgets.ResourcePickerThumbnail, desc: "Action sound played upon completion", params: "acp", category: "Intel Settings"), RplProp()]
 	protected ResourceName m_ActionSound;
 
-	[Attribute("", UIWidgets.EditBox, desc: "The specific event name to START the sound (e.g., SOUND_PICKUP_START)", category: "Intel Settings")]
+	[Attribute("", UIWidgets.EditBox, desc: "The specific event name to START the sound (e.g., SOUND_PICKUP_START)", category: "Intel Settings"), RplProp()]
 	protected string m_sActionSoundEventStart;
 
-	[Attribute("", UIWidgets.EditBox, desc: "The specific event name to END the sound (e.g., SOUND_PICKUP_STOP)", category: "Intel Settings")]
+	[Attribute("", UIWidgets.EditBox, desc: "The specific event name to END the sound (e.g., SOUND_PICKUP_STOP)", category: "Intel Settings"), RplProp()]
 	protected string m_sActionSoundEventEnd;
 
-	[Attribute("0", UIWidgets.Slider, desc: "How long the action takes (seconds)", params: "0 60 1", category: "Intel Settings")]
+	[Attribute("0", UIWidgets.Slider, desc: "How long the action takes (seconds)", params: "0 60 1", category: "Intel Settings"), RplProp()]
 	protected float m_fActionDuration;
 
 	// Getters
@@ -102,6 +102,19 @@ class ATHENA_IntelComponent : ScriptComponent
 	{
 		return m_fActionDuration;
 	}
+
+	// Setters
+	void SetTitle(string val) { m_sIntelTitle = val; Replication.BumpMe(); }
+	void SetType(string val) { m_sIntelType = val; Replication.BumpMe(); }
+	void SetDescription(string val) { m_sIntelDescription = val; Replication.BumpMe(); }
+	void SetShareType(EAthenaIntelShareType val) { m_ShareType = val; Replication.BumpMe(); }
+	void SetPingGM(bool val) { m_bPingGM = val; Replication.BumpMe(); }
+	void SetDeleteOnCompletion(bool val) { m_bDeleteOnCompletion = val; Replication.BumpMe(); }
+	void SetActionText(string val) { m_sActionText = val; Replication.BumpMe(); }
+	void SetActionSound(ResourceName val) { m_ActionSound = val; Replication.BumpMe(); }
+	void SetActionSoundEventStart(string val) { m_sActionSoundEventStart = val; Replication.BumpMe(); }
+	void SetActionSoundEventEnd(string val) { m_sActionSoundEventEnd = val; Replication.BumpMe(); }
+	void SetActionDuration(float val) { m_fActionDuration = val; Replication.BumpMe(); }
 	
 	// Server-side function to handle deleting the entity
 	void DeleteIntelEntity()

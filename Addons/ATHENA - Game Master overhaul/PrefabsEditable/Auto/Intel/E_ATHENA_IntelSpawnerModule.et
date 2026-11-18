@@ -1,0 +1,33 @@
+GenericEntity : "{EE263052AA21FFC6}Prefabs/Intel/ATHENA_IntelSpawnerModule.et" {
+ ID "6AE35A9521D9DC8A"
+ components {
+  SCR_EditableEntityComponent "{6AE36D82FB7FC87A}" : "{996046FE206C699A}Prefabs/Editor/Components/Default_SCR_EditableEntityComponent.ct" {
+   m_EntityType SYSTEM
+   m_UIInfo SCR_EditableEntityUIInfo "{5298E609432D192D}" {
+    Name "(ATHENA_IntelSpawnerModule)"
+    Icon "{FFB23B5FA643DE7F}UI/Textures/EditorPreviews/Auto/Test/E_TestEditableSource.edds"
+    m_Image ""
+    m_aAuthoredLabels {
+    }
+    m_aAutoLabels {
+     ENTITYTYPE_SYSTEM SIZE_S
+    }
+   }
+  }
+  SCR_PreviewEntityComponent "{6AE36D82F80088B4}" : "{6CADA7A88A6265FD}Prefabs/Editor/Components/PreviewEntityComponentClass.ct" {
+   m_bRuntime 1
+   m_aEntries {
+    SCR_BasePreviewEntry "{6AE36D82F8008CD1}" {
+     m_iParentID -1
+     m_Mesh ""
+     m_Flags EDITABLE
+     m_Shape MESH
+     m_iPivotID ""
+     m_vScale 1 1 1
+     m_vPosition 0 0 0
+     m_vAngles 0 0 0
+    }
+   }
+  }
+ }
+}

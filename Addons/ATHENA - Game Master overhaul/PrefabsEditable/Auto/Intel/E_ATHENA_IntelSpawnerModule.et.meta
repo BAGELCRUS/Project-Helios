@@ -1,0 +1,17 @@
+MetaFileClass {
+ Name "{78F30CAF558BC0F6}PrefabsEditable/Auto/Intel/E_ATHENA_IntelSpawnerModule.et"
+ Configurations {
+  EntityTemplateResourceClass PC {
+  }
+  EntityTemplateResourceClass XBOX_ONE : PC {
+  }
+  EntityTemplateResourceClass XBOX_SERIES : PC {
+  }
+  EntityTemplateResourceClass PS4 : PC {
+  }
+  EntityTemplateResourceClass PS5 : PC {
+  }
+  EntityTemplateResourceClass HEADLESS : PC {
+  }
+ }
+}
