@@ -4,6 +4,8 @@ OverlayWidgetClass {
   SizeLayoutWidgetClass "{6AE35A9D4E0E226F}" {
    Name "RootWindow"
    Slot OverlayWidgetSlot "{6A1E4784DB4E37DA}" {
+    HorizontalAlign 1
+    VerticalAlign 1
    }
    AllowWidthOverride 1
    WidthOverride 600
@@ -11,29 +13,34 @@ OverlayWidgetClass {
    HeightOverride 800
    {
     VerticalLayoutWidgetClass "{6AE35A9D4E0E2211}" {
-     Name "VerticalLayout0"
+     Name "RootVBox"
      Slot AlignableSlot "{6A1E4784FD451FBB}" {
-      VerticalAlign 0
+      HorizontalAlign 3
+      VerticalAlign 3
      }
      {
       SizeLayoutWidgetClass "{6AE35A9D4E0E2212}" {
        Name "HeaderFrame"
        Slot LayoutSlot "{6A1E47849FBAE34A}" {
-        HorizontalAlign 1
-        VerticalAlign 1
-        FillWeight 2
+        HorizontalAlign 3
        }
        AllowWidthOverride 1
        WidthOverride 600
+       AllowHeightOverride 1
+       HeightOverride 40
        {
         OverlayWidgetClass "{6AE35A9D4E0E2213}" {
          Name "Overlay0"
          Slot AlignableSlot "{6A1E478867DBF6B7}" {
+          HorizontalAlign 3
+          VerticalAlign 3
          }
          {
           ImageWidgetClass "{6AE35A9D4E0E2215}" {
            Name "BG"
            Slot OverlayWidgetSlot "{6A1E478816F8D8F0}" {
+            HorizontalAlign 3
+            VerticalAlign 3
            }
            Color 0.0343 0.0666 0.0369 1
            Size 600 40
@@ -42,6 +49,7 @@ OverlayWidgetClass {
            Name "Text0"
            Slot OverlayWidgetSlot "{6A1E478837E5DB3E}" {
             HorizontalAlign 0
+            VerticalAlign 1
             Padding 20 0 0 0
            }
            Color 0.7991 0.8148 0.7913 1
@@ -58,112 +66,169 @@ OverlayWidgetClass {
       OverlayWidgetClass "{6AE35A9D4E0E2218}" {
        Name "BodyFrame"
        Slot LayoutSlot "{6A1E4789F9A18DC7}" {
+        HorizontalAlign 3
+        VerticalAlign 3
         SizeMode Fill
        }
        {
         ImageWidgetClass "{6AE35A9D4E0E2219}" {
          Name "BG"
          Slot OverlayWidgetSlot "{6A1E4789832B2F93}" {
+          HorizontalAlign 3
+          VerticalAlign 3
          }
          Color 0.0052 0.0091 0.0144 0.9804
-         Size 600 800
+         Size 600 720
         }
         ImageWidgetClass "{6AE35A9D4E0E221A}" {
          Name "Logo"
-         Slot OverlayWidgetSlot "{6A1E4789832B2F93}" {
+         Slot OverlayWidgetSlot "{6A1E4789832B2F94}" {
+          HorizontalAlign 1
+          VerticalAlign 1
          }
          Color 0 0 0 0.3646
          Texture "{E48C8B4F48E2F427}UI/PH_Logo_2.edds"
          Size 500 500
         }
-        VerticalLayoutWidgetClass "{6AE35A9D4E0E221B}" {
-         Name "ContentStack"
+        ScrollLayoutWidgetClass "{6AE35A9C90CF1675}" {
+         Name "FormScroll"
          Slot OverlayWidgetSlot "{6A1E478952FC3B3F}" {
           HorizontalAlign 3
           VerticalAlign 3
           Padding 20 20 20 20
          }
          {
-          ScrollLayoutWidgetClass "{6AE35A9C90CF1675}" {
-           Name "ScrollLayout0"
-           Slot LayoutSlot "{6AE35A9C90CF1650}" {
+          VerticalLayoutWidgetClass "{6AE35A9803215FA4}" {
+           Name "FormContent"
+           Slot AlignableSlot "{6AE35A980A6A4E24}" {
+            HorizontalAlign 3
+            VerticalAlign 3
            }
            {
-            VerticalLayoutWidgetClass "{6AE35A9803215FA4}" {
-             Name "VerticalLayout0"
-             Slot AlignableSlot "{6AE35A980A6A4E24}" {
+            ButtonWidgetClass "{6AE35A9B80DBBBC0}" : "{4B5AE6E64037FFB4}UI/layouts/WidgetLibrary/ComboBox/WLib_ComboBox.layout" {
+             Name "PrefabSelect"
+             Slot LayoutSlot "{6AE35A9B80DBBB20}" {
               HorizontalAlign 3
-              VerticalAlign 3
+              Padding 4 4 4 4
              }
+            }
+            ButtonWidgetClass "{6AE35A9B80DBBBCD}" : "{4B5AE6E64037FFB4}UI/layouts/WidgetLibrary/ComboBox/WLib_ComboBox.layout" {
+             Name "TypeSelect"
+             Slot LayoutSlot "{6AE35A9B80DBBB21}" {
+              HorizontalAlign 3
+              Padding 4 4 4 4
+             }
+            }
+            ButtonWidgetClass "{6AE35A9B01186251}" : "{0022F0B45ADBC5AC}UI/layouts/WidgetLibrary/EditBox/WLib_EditBox.layout" {
+             Name "ActionTextInput"
+             Slot LayoutSlot "{6AE35A983DB5EF29}" {
+              HorizontalAlign 3
+              Padding 4 4 4 4
+             }
+            }
+            ButtonWidgetClass "{6AE35A9A9E143D64}" : "{4A41296C0E9A889F}UI/layouts/WidgetLibrary/WLib_Slider.layout" {
+             Name "ActionDurationInput"
+             Slot LayoutSlot "{6AE35A9A9E143D59}" {
+              HorizontalAlign 3
+              Padding 4 4 4 4
+             }
+            }
+            ButtonWidgetClass "{6AE35A9B1FF5E01F}" : "{5D5055E10FD00549}UI/layouts/WidgetLibrary/ToolBoxes/WLib_Checkbox.layout" {
+             Name "DeleteOnCompletionInput"
+             Slot LayoutSlot "{6AE35A9B6F017E72}" {
+              HorizontalAlign 3
+              Padding 2 2 2 2
+             }
+            }
+            ButtonWidgetClass "{6AE35A9BA1282F87}" : "{4B5AE6E64037FFB4}UI/layouts/WidgetLibrary/ComboBox/WLib_ComboBox.layout" {
+             Name "ShareTypeSelect"
+             Slot LayoutSlot "{6AE35A9BA1282FEB}" {
+              HorizontalAlign 3
+              Padding 4 4 4 4
+             }
+            }
+            ButtonWidgetClass "{6AE35A9AF6EAB3DE}" : "{4B5AE6E64037FFB4}UI/layouts/WidgetLibrary/ComboBox/WLib_ComboBox.layout" {
+             Name "ActionSoundSelect"
+             Slot LayoutSlot "{6AE35A9BA1282FEC}" {
+              HorizontalAlign 3
+              Padding 4 4 4 4
+             }
+            }
+            ButtonWidgetClass "{6AE35A9B6F017E01}" : "{5D5055E10FD00549}UI/layouts/WidgetLibrary/ToolBoxes/WLib_Checkbox.layout" {
+             Name "PingGMInput"
+             Slot LayoutSlot "{6AE35A9B6F017E73}" {
+              HorizontalAlign 3
+              Padding 2 2 2 2
+             }
+            }
+            ButtonWidgetClass "{6AE36D8CDB03A8F2}" : "{0022F0B45ADBC5AC}UI/layouts/WidgetLibrary/EditBox/WLib_EditBox.layout" {
+             Name "TitleInput"
+             Slot LayoutSlot "{6AE36D8CDB03A8E0}" {
+              HorizontalAlign 3
+              Padding 4 4 4 4
+             }
+            }
+            TextWidgetClass "{6AE74D2A0335E453}" {
+             Name "DescriptionLabel"
+             Slot LayoutSlot "{6AE74D2A0335E474}" {
+              HorizontalAlign 0
+              Padding 4 8 4 4
+             }
+             Text "Intel Description:"
+             "Font Size" 18
+             FontProperties FontProperties "{6AE74D2A0335E475}" {
+              Font "{CD2634D279AB011A}UI/Fonts/Roboto/Roboto_Bold.fnt"
+             }
+            }
+            SizeLayoutWidgetClass "{6AE74D2A7C5836FB}" {
+             Name "DescriptionBoxFrame"
+             Slot LayoutSlot "{6AE74D2A7C58369C}" {
+              HorizontalAlign 3
+              Padding 4 0 4 4
+             }
+             AllowHeightOverride 1
+             HeightOverride 220
              {
-              ButtonWidgetClass "{6AE36D8CDB03A8F2}" : "{0022F0B45ADBC5AC}UI/layouts/WidgetLibrary/EditBox/WLib_EditBox.layout" {
-               Name "TitleInput"
-               Slot LayoutSlot "{6AE36D8CDB03A8E0}" {
+              OverlayWidgetClass "{6AE74D2A7C5836FC}" {
+               Name "DescriptionOverlay"
+               Slot AlignableSlot "{6AE74D2A7C5836FD}" {
                 HorizontalAlign 3
-                Padding 4 4 4 4
+                VerticalAlign 3
                }
-              }
-              ButtonWidgetClass "{6AE36D8CF5044232}" : "{97C4F8AF11039BCF}UI/layouts/WidgetLibrary/EditBox/WLib_EditBoxMultiline.layout" {
-               Name "DescriptionInput"
-               Slot LayoutSlot "{6AE36D8CF504423E}" {
-                HorizontalAlign 3
-                Padding 4 4 4 4
-               }
-              }
-              ButtonWidgetClass "{6AE35A9B80DBBBC0}" : "{4B5AE6E64037FFB4}UI/layouts/WidgetLibrary/ComboBox/WLib_ComboBox.layout" {
-               Name "PrefabSelect"
-               Slot LayoutSlot "{6AE35A9B80DBBB20}" {
-                HorizontalAlign 3
-                Padding 4 4 4 4
-               }
-              }
-              ButtonWidgetClass "{6AE35A9B80DBBBCD}" : "{4B5AE6E64037FFB4}UI/layouts/WidgetLibrary/ComboBox/WLib_ComboBox.layout" {
-               Name "TypeSelect"
-               Slot LayoutSlot "{6AE35A9B80DBBB21}" {
-                HorizontalAlign 3
-                Padding 4 4 4 4
-               }
-              }
-              ButtonWidgetClass "{6AE35A9B01186251}" : "{0022F0B45ADBC5AC}UI/layouts/WidgetLibrary/EditBox/WLib_EditBox.layout" {
-               Name "ActionTextInput"
-               Slot LayoutSlot "{6AE35A983DB5EF29}" {
-                HorizontalAlign 3
-                Padding 4 4 4 4
-               }
-              }
-              ButtonWidgetClass "{6AE35A9A9E143D64}" : "{4A41296C0E9A889F}UI/layouts/WidgetLibrary/WLib_Slider.layout" {
-               Name "ActionDurationInput"
-               Slot LayoutSlot "{6AE35A9A9E143D59}" {
-                HorizontalAlign 3
-                Padding 4 4 4 4
-               }
-              }
-              ButtonWidgetClass "{6AE35A9B1FF5E01F}" : "{5D5055E10FD00549}UI/layouts/WidgetLibrary/ToolBoxes/WLib_Checkbox.layout" {
-               Name "DeleteOnCompletionInput"
-               Slot LayoutSlot "{6AE35A9B6F017E72}" {
-                HorizontalAlign 3
-                Padding 2 2 2 2
-               }
-              }
-              ButtonWidgetClass "{6AE35A9BA1282F87}" : "{4B5AE6E64037FFB4}UI/layouts/WidgetLibrary/ComboBox/WLib_ComboBox.layout" {
-               Name "ShareTypeSelect"
-               Slot LayoutSlot "{6AE35A9BA1282FEB}" {
-                HorizontalAlign 3
-                Padding 4 4 4 4
-               }
-              }
-              ButtonWidgetClass "{6AE35A9AF6EAB3DE}" : "{4B5AE6E64037FFB4}UI/layouts/WidgetLibrary/ComboBox/WLib_ComboBox.layout" {
-               Name "ActionSoundSelect"
-               Slot LayoutSlot "{6AE35A9BA1282FEB}" {
-                HorizontalAlign 3
-                Padding 4 4 4 4
-               }
-              }
-              ButtonWidgetClass "{6AE35A9B6F017E01}" : "{5D5055E10FD00549}UI/layouts/WidgetLibrary/ToolBoxes/WLib_Checkbox.layout" {
-               Name "PingGMInput"
-               Slot LayoutSlot "{6AE35A9B6F017E72}" {
-                HorizontalAlign 3
-                Padding 2 2 2 2
+               {
+                ImageWidgetClass "{6AE74D2A7C5836FE}" {
+                 Name "DescriptionBG"
+                 Slot OverlayWidgetSlot "{6AE74D2A7C5836FF}" {
+                  HorizontalAlign 3
+                  VerticalAlign 3
+                 }
+                 Color 0 0 0 0.45
+                }
+                ScrollLayoutWidgetClass "{6AE74D2A6C8366E5}" {
+                 Name "DescriptionScroll"
+                 Slot OverlayWidgetSlot "{6AE74D2A6C836687}" {
+                  HorizontalAlign 3
+                  VerticalAlign 3
+                  Padding 6 6 6 6
+                 }
+                 "Scrollbar Always Visible" 1
+                 {
+                  MultilineEditBoxWidgetClass "{6AE74D2A157090FF}" {
+                   Name "DescriptionInput"
+                   Slot AlignableSlot "{6AE74D2A1570909C}" {
+                    HorizontalAlign 3
+                    VerticalAlign 3
+                   }
+                   Text ""
+                   "Font Size" 18
+                   "Min Font Size" 16
+                   Wrap 1
+                   FontProperties FontProperties "{6AE74D2A1570909D}" {
+                    Font "{E2CBA6F76AAA42AF}UI/Fonts/Roboto/Roboto_Regular.fnt"
+                   }
+                  }
+                 }
+                }
                }
               }
              }
@@ -177,6 +242,7 @@ OverlayWidgetClass {
       SizeLayoutWidgetClass "{6AE35A9D4E0E52CF}" {
        Name "FooterFrame"
        Slot LayoutSlot "{6A1E478AAC77D04B}" {
+        HorizontalAlign 3
        }
        AllowWidthOverride 1
        WidthOverride 600
@@ -186,11 +252,15 @@ OverlayWidgetClass {
         OverlayWidgetClass "{6AE35A9D4E0E52C0}" {
          Name "Overlay0"
          Slot AlignableSlot "{6A1E478B72EFF464}" {
+          HorizontalAlign 3
+          VerticalAlign 3
          }
          {
           ImageWidgetClass "{6AE35A9D4E0E52C1}" {
            Name "BG"
            Slot OverlayWidgetSlot "{6A1E478B7B0C6ADC}" {
+            HorizontalAlign 3
+            VerticalAlign 3
            }
            Color 0.0052 0.0091 0.0144 0.9804
            Size 600 40
@@ -199,6 +269,7 @@ OverlayWidgetClass {
            Name "HorizontalLayout0"
            Slot OverlayWidgetSlot "{6A1E478B1F5E931B}" {
             HorizontalAlign 0
+            VerticalAlign 1
            }
            {
             ButtonWidgetClass "{6AE35A9D4E0E676A}" : "{08CF3B69CB1ACBC4}UI/layouts/WidgetLibrary/Buttons/WLib_NavigationButton.layout" {

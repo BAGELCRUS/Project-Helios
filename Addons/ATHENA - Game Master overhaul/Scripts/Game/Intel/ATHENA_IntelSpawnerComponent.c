@@ -116,15 +116,15 @@ class ATHENA_IntelSpawnerComponent : ScriptComponent
 		if (prefabToSpawn.IsEmpty())
 			prefabToSpawn = ATHENA_IntelConfig.FALLBACK_PREFAB;
 
-		// Pack shareType (bits 0..7), pingGM (bit 8), deleteOnCompletion (bit 9), and soundIndex (bits 16..31)
+		// Pack shareType (0..255), pingGM (256), deleteOnCompletion (512), and soundIndex (* 65536)
 		// to stay within Enfusion's 8-parameter RPC limit.
 		int packedFlags = (shareType & 0xFF);
 		if (pingGM)
-			packedFlags = packedFlags | (1 << 8);
+			packedFlags = packedFlags | 256;
 		if (deleteOnCompletion)
-			packedFlags = packedFlags | (1 << 9);
+			packedFlags = packedFlags | 512;
 		if (soundIndex > 0)
-			packedFlags = packedFlags | ((soundIndex & 0xFFFF) << 16);
+			packedFlags = packedFlags + ((soundIndex & 0x7FFF) * 65536);
 
 		if (Replication.IsServer())
 		{
@@ -170,9 +170,10 @@ class ATHENA_IntelSpawnerComponent : ScriptComponent
 			return;
 
 		EAthenaIntelShareType shareType = (packedFlags & 0xFF);
-		bool pingGM = ((packedFlags & (1 << 8)) != 0);
-		bool deleteOnCompletion = ((packedFlags & (1 << 9)) != 0);
-		int soundIndex = ((packedFlags >> 16) & 0xFFFF);
+		bool pingGM = ((packedFlags & 256) != 0);
+		bool deleteOnCompletion = ((packedFlags & 512) != 0);
+		int soundShifted = packedFlags / 65536;
+		int soundIndex = (soundShifted & 0x7FFF);
 
 		ResourceName actionSound = "";
 		string soundStart = "";

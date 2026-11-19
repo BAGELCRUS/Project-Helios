@@ -115,6 +115,232 @@ class ATHENA_IntelComponent : ScriptComponent
 	void SetActionSoundEventStart(string val) { m_sActionSoundEventStart = val; Replication.BumpMe(); }
 	void SetActionSoundEventEnd(string val) { m_sActionSoundEventEnd = val; Replication.BumpMe(); }
 	void SetActionDuration(float val) { m_fActionDuration = val; Replication.BumpMe(); }
+
+	//------------------------------------------------------------------------------------------------
+	void ApplyIntelSettings(
+		string title,
+		string intelType,
+		string description,
+		string actionText,
+		EAthenaIntelShareType shareType,
+		bool pingGM,
+		bool deleteOnCompletion,
+		ResourceName actionSound,
+		string soundStart,
+		string soundEnd,
+		float actionDuration
+	)
+	{
+		m_sIntelTitle = title;
+		m_sIntelType = intelType;
+		m_sIntelDescription = description;
+		m_sActionText = actionText;
+		m_ShareType = shareType;
+		m_bPingGM = pingGM;
+		m_bDeleteOnCompletion = deleteOnCompletion;
+		m_ActionSound = actionSound;
+		m_sActionSoundEventStart = soundStart;
+		m_sActionSoundEventEnd = soundEnd;
+		m_fActionDuration = actionDuration;
+		Replication.BumpMe();
+	}
+
+	//------------------------------------------------------------------------------------------------
+	// Called by the Game Master Edit Intel dialog to update an existing Intel entity (or swap its prefab) on the server.
+	void RequestUpdateIntel(
+		ResourceName newPrefab,
+		string title,
+		string intelType,
+		string description,
+		string actionText,
+		EAthenaIntelShareType shareType,
+		bool pingGM,
+		bool deleteOnCompletion,
+		int soundIndex,
+		float actionDuration
+	)
+	{
+		// Pack shareType (0..15), pingGM (16), deleteOnCompletion (32),
+		// soundIndex (0..1023 * 64), and actionDuration in tenths of a second (0..1023 * 65536)
+		// so RPCs stay strictly within Enfusion's parameter limit.
+		int packedFlags = (shareType & 0x0F);
+		if (pingGM)
+			packedFlags = packedFlags | 16;
+		if (deleteOnCompletion)
+			packedFlags = packedFlags | 32;
+		if (soundIndex > 0)
+			packedFlags = packedFlags + ((soundIndex & 0x3FF) * 64);
+
+		int durationTenths = Math.ClampInt(Math.Round(actionDuration * 10.0), 0, 1023);
+		packedFlags = packedFlags + ((durationTenths & 0x3FF) * 65536);
+
+		if (Replication.IsServer())
+		{
+			ServerApplyPackedUpdate(
+				newPrefab,
+				title,
+				intelType,
+				description,
+				actionText,
+				packedFlags
+			);
+			return;
+		}
+
+		// On a dedicated server, world Intel entities are server-owned, so relay the update
+		// via the local client's PlayerController-owned ATHENA_PlayerIntelComponent.
+		ATHENA_PlayerIntelComponent playerIntel = ATHENA_PlayerIntelComponent.GetLocalInstance();
+		RplId intelId = Replication.FindItemId(this);
+		if (playerIntel && intelId.IsValid())
+		{
+			playerIntel.RequestUpdateIntelOnServer(
+				intelId,
+				newPrefab,
+				title,
+				intelType,
+				description,
+				actionText,
+				packedFlags
+			);
+		}
+		else
+		{
+			Rpc(
+				RpcDo_UpdateIntel,
+				newPrefab,
+				title,
+				intelType,
+				description,
+				actionText,
+				packedFlags
+			);
+		}
+	}
+
+	//------------------------------------------------------------------------------------------------
+	[RplRpc(RplChannel.Reliable, RplRcver.Server)]
+	protected void RpcDo_UpdateIntel(
+		ResourceName newPrefab,
+		string title,
+		string intelType,
+		string description,
+		string actionText,
+		int packedFlags
+	)
+	{
+		ServerApplyPackedUpdate(
+			newPrefab,
+			title,
+			intelType,
+			description,
+			actionText,
+			packedFlags
+		);
+	}
+
+	//------------------------------------------------------------------------------------------------
+	void ServerApplyPackedUpdate(
+		ResourceName newPrefab,
+		string title,
+		string intelType,
+		string description,
+		string actionText,
+		int packedFlags
+	)
+	{
+		IEntity owner = GetOwner();
+		if (!owner)
+			return;
+
+		EAthenaIntelShareType shareType = (packedFlags & 0x0F);
+		bool pingGM = ((packedFlags & 16) != 0);
+		bool deleteOnCompletion = ((packedFlags & 32) != 0);
+		int soundShifted = packedFlags / 64;
+		int soundIndex = (soundShifted & 0x3FF);
+		int durationShifted = packedFlags / 65536;
+		int durationTenths = (durationShifted & 0x3FF);
+		float actionDuration = durationTenths * 0.1;
+
+		ResourceName actionSound = m_ActionSound;
+		string soundStart = m_sActionSoundEventStart;
+		string soundEnd = m_sActionSoundEventEnd;
+
+		ATHENA_IntelConfig config = ATHENA_IntelConfig.LoadConfig();
+		if (config && config.m_aActionSounds && soundIndex >= 0 && soundIndex < config.m_aActionSounds.Count())
+		{
+			ATHENA_IntelSoundSetting soundSetting = config.m_aActionSounds[soundIndex];
+			if (soundSetting)
+			{
+				actionSound = soundSetting.m_ActionSound;
+				soundStart = soundSetting.m_sActionSoundEventStart;
+				soundEnd = soundSetting.m_sActionSoundEventEnd;
+			}
+		}
+
+		ResourceName currentPrefab = ResourceName.Empty;
+		EntityPrefabData prefabData = owner.GetPrefabData();
+		if (prefabData)
+			currentPrefab = prefabData.GetPrefabName();
+
+		// If the GM switched to a different prefab, respawn at the same transform with the updated settings
+		if (!newPrefab.IsEmpty() && newPrefab != currentPrefab)
+		{
+			Resource res = Resource.Load(newPrefab);
+			if (res && res.IsValid())
+			{
+				vector mat[4];
+				owner.GetTransform(mat);
+
+				EntitySpawnParams params = new EntitySpawnParams();
+				params.TransformMode = ETransformMode.WORLD;
+				params.Transform = mat;
+
+				IEntity newIntel = GetGame().SpawnEntityPrefab(res, owner.GetWorld(), params);
+				if (newIntel)
+				{
+					ATHENA_IntelComponent newIntelComp = ATHENA_IntelComponent.Cast(newIntel.FindComponent(ATHENA_IntelComponent));
+					if (newIntelComp)
+					{
+						newIntelComp.ApplyIntelSettings(
+							title,
+							intelType,
+							description,
+							actionText,
+							shareType,
+							pingGM,
+							deleteOnCompletion,
+							actionSound,
+							soundStart,
+							soundEnd,
+							actionDuration
+						);
+					}
+
+					SCR_EntityHelper.DeleteEntityAndChildren(owner);
+					return;
+				}
+			}
+			else
+			{
+				Print("ATHENA_IntelComponent: Failed to load replacement prefab: " + newPrefab + ", updating in-place instead.", LogLevel.WARNING);
+			}
+		}
+
+		// Update this Intel entity in-place
+		ApplyIntelSettings(
+			title,
+			intelType,
+			description,
+			actionText,
+			shareType,
+			pingGM,
+			deleteOnCompletion,
+			actionSound,
+			soundStart,
+			soundEnd,
+			actionDuration
+		);
+	}
 	
 	// Server-side function to handle deleting the entity
 	void DeleteIntelEntity()

@@ -15,11 +15,54 @@
 //   - "ActionSoundSelect"       (SCR_SpinBoxComponent or SCR_ComboBoxComponent)
 //   - "ActionDurationInput"     (SliderWidget, SCR_SliderComponent, EditBoxWidget, or SCR_EditBoxComponent)
 //   - "CloseButton0"            (Optional ButtonWidget with SCR_ButtonBaseComponent)
+// Handler attached to MultilineEditBoxWidget so pressing Enter or Shift+Enter inserts a newline
+// and re-activates write mode so the text box stays open.
+class ATHENA_MultilineEnterHandler : ScriptedWidgetEventHandler
+{
+	override bool OnWriteModeLeave(Widget w)
+	{
+		MultilineEditBoxWidget multi = MultilineEditBoxWidget.Cast(w);
+		if (!multi)
+			return false;
+
+		if (Debug.KeyState(KeyCode.KC_RETURN) || Debug.KeyState(KeyCode.KC_NUMPADENTER))
+		{
+			multi.SetText(multi.GetText() + "\n");
+			ScrollParentToBottom(multi);
+			GetGame().GetCallqueue().CallLater(ReactivateWriteMode, 1, false, multi);
+			return true;
+		}
+
+		return false;
+	}
+
+	protected void ReactivateWriteMode(MultilineEditBoxWidget multi)
+	{
+		if (multi)
+		{
+			multi.ActivateWriteMode();
+			ScrollParentToBottom(multi);
+		}
+	}
+
+	protected void ScrollParentToBottom(Widget w)
+	{
+		if (!w)
+			return;
+
+		ScrollLayoutWidget scroll = ScrollLayoutWidget.Cast(w.GetParent());
+		if (scroll)
+			scroll.SetSliderPos(0, 1);
+	}
+}
+
 class ATHENA_IntelSpawnerDialogUI : SCR_ConfigurableDialogUi
 {
 	protected static ATHENA_IntelSpawnerComponent s_NextSpawnerComp;
+	protected static ATHENA_IntelComponent s_NextEditIntelComp;
 
 	protected ATHENA_IntelSpawnerComponent m_SpawnerComp;
+	protected ATHENA_IntelComponent m_EditIntelComp;
 	protected ref ATHENA_IntelConfig m_IntelConfig;
 
 	protected Widget m_wPrefabSelect;
@@ -33,12 +76,28 @@ class ATHENA_IntelSpawnerDialogUI : SCR_ConfigurableDialogUi
 	protected Widget m_wActionSoundSelect;
 	protected Widget m_wActionDurationInput;
 
+	protected ref ATHENA_MultilineEnterHandler m_DescriptionEnterHandler;
 	protected bool m_bSpawned = false;
 
 	//------------------------------------------------------------------------------------------------
 	static ATHENA_IntelSpawnerDialogUI Open(ATHENA_IntelSpawnerComponent spawnerComp)
 	{
 		s_NextSpawnerComp = spawnerComp;
+		s_NextEditIntelComp = null;
+
+		ATHENA_IntelSpawnerDialogUI dialog = new ATHENA_IntelSpawnerDialogUI();
+		SCR_ConfigurableDialogUi.CreateFromPreset("{5938AB21CE701D21}Configs/Dialogs/IntelDialogs.conf", "intelSpawner", dialog);
+		return dialog;
+	}
+
+	//------------------------------------------------------------------------------------------------
+	static ATHENA_IntelSpawnerDialogUI OpenForEdit(ATHENA_IntelComponent intelComp)
+	{
+		if (!intelComp)
+			return null;
+
+		s_NextSpawnerComp = null;
+		s_NextEditIntelComp = intelComp;
 
 		ATHENA_IntelSpawnerDialogUI dialog = new ATHENA_IntelSpawnerDialogUI();
 		SCR_ConfigurableDialogUi.CreateFromPreset("{5938AB21CE701D21}Configs/Dialogs/IntelDialogs.conf", "intelSpawner", dialog);
@@ -53,11 +112,26 @@ class ATHENA_IntelSpawnerDialogUI : SCR_ConfigurableDialogUi
 		m_SpawnerComp = s_NextSpawnerComp;
 		s_NextSpawnerComp = null;
 
+		m_EditIntelComp = s_NextEditIntelComp;
+		s_NextEditIntelComp = null;
+
 		m_IntelConfig = ATHENA_IntelConfig.LoadConfig();
 
 		Widget root = GetRootWidget();
 		if (!root)
 			return;
+
+		// Update header title when editing an existing Intel entity
+		if (m_EditIntelComp)
+		{
+			Widget headerFrame = root.FindAnyWidget("HeaderFrame");
+			if (headerFrame)
+			{
+				TextWidget headerTitle = TextWidget.Cast(headerFrame.FindAnyWidget("Text0"));
+				if (headerTitle)
+					headerTitle.SetText("Edit Intel");
+			}
+		}
 
 		// Strip any SCR_BaseEditorAttributeUIComponent handlers (e.g. if AttributePrefab_Slider is used)
 		// so they do not crash with a NULL m_InputManager outside the GM Attributes dialog.
@@ -65,20 +139,6 @@ class ATHENA_IntelSpawnerDialogUI : SCR_ConfigurableDialogUi
 
 		// Locate widgets in custom layout
 		m_wPrefabSelect = root.FindAnyWidget("PrefabSelect");
-		if (!m_wPrefabSelect)
-		{
-			Widget formContainer = root.FindAnyWidget("VerticalLayout0");
-			if (formContainer)
-			{
-				m_wPrefabSelect = GetGame().GetWorkspace().CreateWidgets("{4B5AE6E64037FFB4}UI/layouts/WidgetLibrary/ComboBox/WLib_ComboBox.layout", formContainer);
-				if (m_wPrefabSelect)
-				{
-					m_wPrefabSelect.SetName("PrefabSelect");
-					LayoutSlot.SetHorizontalAlign(m_wPrefabSelect, LayoutHorizontalAlign.Stretch);
-					LayoutSlot.SetPadding(m_wPrefabSelect, 4, 4, 4, 4);
-				}
-			}
-		}
 		m_wTitleInput = root.FindAnyWidget("TitleInput");
 		m_wTypeSelect = root.FindAnyWidget("TypeSelect");
 		m_wDescriptionInput = root.FindAnyWidget("DescriptionInput");
@@ -89,7 +149,19 @@ class ATHENA_IntelSpawnerDialogUI : SCR_ConfigurableDialogUi
 		m_wActionSoundSelect = root.FindAnyWidget("ActionSoundSelect");
 		m_wActionDurationInput = root.FindAnyWidget("ActionDurationInput");
 
+		if (!m_wPrefabSelect)
+			Print("ATHENA_IntelSpawnerDialogUI: Missing widget 'PrefabSelect' in layout!", LogLevel.WARNING);
+		if (!m_wDescriptionInput)
+			Print("ATHENA_IntelSpawnerDialogUI: Missing widget 'DescriptionInput' in layout!", LogLevel.WARNING);
+
 		PopulateDefaults();
+
+		// Allow pressing Enter inside DescriptionInput to insert a new line instead of closing write mode
+		if (MultilineEditBoxWidget.Cast(m_wDescriptionInput))
+		{
+			m_DescriptionEnterHandler = new ATHENA_MultilineEnterHandler();
+			m_wDescriptionInput.AddHandler(m_DescriptionEnterHandler);
+		}
 
 		// Optional Close/Save button support if present in layout
 		Widget closeBtn = root.FindAnyWidget("CloseButton0");
@@ -138,7 +210,30 @@ class ATHENA_IntelSpawnerDialogUI : SCR_ConfigurableDialogUi
 		bool defaultDelete = false;
 		float defaultDuration = 0;
 
-		if (m_SpawnerComp)
+		ResourceName savedPrefab = ResourceName.Empty;
+		ResourceName savedSound = ResourceName.Empty;
+		string savedSoundStart = "";
+		string savedSoundEnd = "";
+
+		if (m_EditIntelComp)
+		{
+			defaultTitle = m_EditIntelComp.GetTitle();
+			defaultType = m_EditIntelComp.GetType();
+			defaultDesc = m_EditIntelComp.GetDescription();
+			defaultActionText = m_EditIntelComp.GetActionText();
+			defaultShare = m_EditIntelComp.GetShareType();
+			defaultPingGM = m_EditIntelComp.ShouldPingGM();
+			defaultDelete = m_EditIntelComp.ShouldDeleteOnCompletion();
+			defaultDuration = m_EditIntelComp.GetActionDuration();
+			savedSound = m_EditIntelComp.GetActionSound();
+			savedSoundStart = m_EditIntelComp.GetActionSoundEventStart();
+			savedSoundEnd = m_EditIntelComp.GetActionSoundEventEnd();
+
+			IEntity editOwner = m_EditIntelComp.GetOwner();
+			if (editOwner && editOwner.GetPrefabData())
+				savedPrefab = editOwner.GetPrefabData().GetPrefabName();
+		}
+		else if (m_SpawnerComp)
 		{
 			defaultTitle = m_SpawnerComp.GetDefaultTitle();
 			defaultType = m_SpawnerComp.GetDefaultType();
@@ -151,15 +246,27 @@ class ATHENA_IntelSpawnerDialogUI : SCR_ConfigurableDialogUi
 		}
 
 		// 1. Populate Prefabs from ATHENA_IntelConfig
+		int prefabIdx = 0;
 		array<string> prefabNames = new array<string>();
 		if (m_IntelConfig && m_IntelConfig.m_aAvailablePrefabs)
 		{
+			if (!savedPrefab.IsEmpty())
+			{
+				prefabIdx = m_IntelConfig.m_aAvailablePrefabs.Find(savedPrefab);
+				if (prefabIdx < 0)
+				{
+					// Preserve the entity's current prefab even if not listed in ATHENA_IntelConfig.conf
+					m_IntelConfig.m_aAvailablePrefabs.Insert(savedPrefab);
+					prefabIdx = m_IntelConfig.m_aAvailablePrefabs.Count() - 1;
+				}
+			}
+
 			foreach (ResourceName prefabRes : m_IntelConfig.m_aAvailablePrefabs)
 			{
 				prefabNames.Insert(ATHENA_IntelConfig.GetPrefabDisplayName(prefabRes));
 			}
 		}
-		PopulateSelectionWidget(m_wPrefabSelect, "Intel Prefab", prefabNames, 0);
+		PopulateSelectionWidget(m_wPrefabSelect, "Intel Prefab", prefabNames, prefabIdx);
 
 		// 2. Populate Intel Types from ATHENA_IntelConfig
 		int typeIdx = 0;
@@ -167,7 +274,17 @@ class ATHENA_IntelSpawnerDialogUI : SCR_ConfigurableDialogUi
 		{
 			typeIdx = m_IntelConfig.m_aIntelTypes.Find(defaultType);
 			if (typeIdx < 0)
-				typeIdx = 0;
+			{
+				if (m_EditIntelComp && !defaultType.IsEmpty())
+				{
+					m_IntelConfig.m_aIntelTypes.Insert(defaultType);
+					typeIdx = m_IntelConfig.m_aIntelTypes.Count() - 1;
+				}
+				else
+				{
+					typeIdx = 0;
+				}
+			}
 			PopulateSelectionWidget(m_wTypeSelect, "Intel Type", m_IntelConfig.m_aIntelTypes, typeIdx);
 		}
 
@@ -180,17 +297,37 @@ class ATHENA_IntelSpawnerDialogUI : SCR_ConfigurableDialogUi
 		PopulateSelectionWidget(m_wShareTypeSelect, "Share Type", shareTypeNames, defaultShare);
 
 		// 4. Populate Action Sounds from ATHENA_IntelConfig
+		int soundIdx = 0;
 		array<string> soundNames = new array<string>();
 		if (m_IntelConfig && m_IntelConfig.m_aActionSounds)
 		{
-			foreach (ATHENA_IntelSoundSetting soundSetting : m_IntelConfig.m_aActionSounds)
+			int partialMatchIdx = -1;
+			for (int i = 0; i < m_IntelConfig.m_aActionSounds.Count(); i++)
 			{
+				ATHENA_IntelSoundSetting soundSetting = m_IntelConfig.m_aActionSounds[i];
 				soundNames.Insert(soundSetting.m_sName);
-			}
-		}
-		PopulateSelectionWidget(m_wActionSoundSelect, "Action Sound", soundNames, 0);
 
-		// 5. Set default texts, booleans, and duration
+				if (m_EditIntelComp)
+				{
+					if (soundSetting.m_ActionSound == savedSound
+						&& soundSetting.m_sActionSoundEventStart == savedSoundStart
+						&& soundSetting.m_sActionSoundEventEnd == savedSoundEnd)
+					{
+						soundIdx = i;
+					}
+					else if (partialMatchIdx < 0 && !savedSound.IsEmpty() && soundSetting.m_ActionSound == savedSound)
+					{
+						partialMatchIdx = i;
+					}
+				}
+			}
+
+			if (m_EditIntelComp && soundIdx == 0 && partialMatchIdx >= 0 && !savedSound.IsEmpty())
+				soundIdx = partialMatchIdx;
+		}
+		PopulateSelectionWidget(m_wActionSoundSelect, "Action Sound", soundNames, soundIdx);
+
+		// 5. Set texts, booleans, and duration
 		SetWidgetText(m_wTitleInput, "Intel Title", defaultTitle);
 		SetWidgetText(m_wDescriptionInput, "Intel Description", defaultDesc);
 		SetWidgetText(m_wActionTextInput, "Action Text", defaultActionText);
@@ -469,13 +606,51 @@ class ATHENA_IntelSpawnerDialogUI : SCR_ConfigurableDialogUi
 	//------------------------------------------------------------------------------------------------
 	protected void SaveAndSpawn()
 	{
-		if (m_bSpawned || !m_SpawnerComp)
+		if (m_bSpawned || (!m_SpawnerComp && !m_EditIntelComp))
 			return;
 
 		m_bSpawned = true;
 
+		// Fallbacks based on active mode (edit vs spawn)
+		ResourceName fallbackPrefab = ResourceName.Empty;
+		string fallbackTitle = "Confidential Intel";
+		string fallbackType = "Document";
+		string fallbackDesc = "Top secret description...";
+		string fallbackActionText = "Read Intel";
+		EAthenaIntelShareType fallbackShare = EAthenaIntelShareType.Individual;
+		bool fallbackPingGM = false;
+		bool fallbackDelete = false;
+		float fallbackDuration = 0;
+
+		if (m_EditIntelComp)
+		{
+			IEntity editOwner = m_EditIntelComp.GetOwner();
+			if (editOwner && editOwner.GetPrefabData())
+				fallbackPrefab = editOwner.GetPrefabData().GetPrefabName();
+			fallbackTitle = m_EditIntelComp.GetTitle();
+			fallbackType = m_EditIntelComp.GetType();
+			fallbackDesc = m_EditIntelComp.GetDescription();
+			fallbackActionText = m_EditIntelComp.GetActionText();
+			fallbackShare = m_EditIntelComp.GetShareType();
+			fallbackPingGM = m_EditIntelComp.ShouldPingGM();
+			fallbackDelete = m_EditIntelComp.ShouldDeleteOnCompletion();
+			fallbackDuration = m_EditIntelComp.GetActionDuration();
+		}
+		else if (m_SpawnerComp)
+		{
+			fallbackPrefab = m_SpawnerComp.GetDefaultFallbackPrefab();
+			fallbackTitle = m_SpawnerComp.GetDefaultTitle();
+			fallbackType = m_SpawnerComp.GetDefaultType();
+			fallbackDesc = m_SpawnerComp.GetDefaultDescription();
+			fallbackActionText = m_SpawnerComp.GetDefaultActionText();
+			fallbackShare = m_SpawnerComp.GetDefaultShareType();
+			fallbackPingGM = m_SpawnerComp.GetDefaultPingGM();
+			fallbackDelete = m_SpawnerComp.GetDefaultDeleteOnCompletion();
+			fallbackDuration = m_SpawnerComp.GetDefaultActionDuration();
+		}
+
 		// 1. Selected Prefab
-		ResourceName selectedPrefab = m_SpawnerComp.GetDefaultFallbackPrefab();
+		ResourceName selectedPrefab = fallbackPrefab;
 		if (m_IntelConfig && m_IntelConfig.m_aAvailablePrefabs && !m_IntelConfig.m_aAvailablePrefabs.IsEmpty())
 		{
 			int prefabIdx = Math.ClampInt(ReadSelectionIndex(m_wPrefabSelect, 0), 0, m_IntelConfig.m_aAvailablePrefabs.Count() - 1);
@@ -483,10 +658,10 @@ class ATHENA_IntelSpawnerDialogUI : SCR_ConfigurableDialogUi
 		}
 
 		// 2. Title
-		string title = ReadWidgetText(m_wTitleInput, m_SpawnerComp.GetDefaultTitle());
+		string title = ReadWidgetText(m_wTitleInput, fallbackTitle);
 
 		// 3. Intel Type
-		string intelType = m_SpawnerComp.GetDefaultType();
+		string intelType = fallbackType;
 		if (m_IntelConfig && m_IntelConfig.m_aIntelTypes && !m_IntelConfig.m_aIntelTypes.IsEmpty())
 		{
 			int typeIdx = Math.ClampInt(ReadSelectionIndex(m_wTypeSelect, 0), 0, m_IntelConfig.m_aIntelTypes.Count() - 1);
@@ -494,17 +669,17 @@ class ATHENA_IntelSpawnerDialogUI : SCR_ConfigurableDialogUi
 		}
 
 		// 4. Description
-		string description = ReadWidgetText(m_wDescriptionInput, m_SpawnerComp.GetDefaultDescription());
+		string description = ReadWidgetText(m_wDescriptionInput, fallbackDesc);
 
 		// 5. Share Type
-		EAthenaIntelShareType shareType = Math.ClampInt(ReadSelectionIndex(m_wShareTypeSelect, m_SpawnerComp.GetDefaultShareType()), 0, 4);
+		EAthenaIntelShareType shareType = Math.ClampInt(ReadSelectionIndex(m_wShareTypeSelect, fallbackShare), 0, 4);
 
 		// 6. Ping GM & Delete on Completion
-		bool pingGM = ReadWidgetBool(m_wPingGMInput, m_SpawnerComp.GetDefaultPingGM());
-		bool deleteOnCompletion = ReadWidgetBool(m_wDeleteOnCompletionInput, m_SpawnerComp.GetDefaultDeleteOnCompletion());
+		bool pingGM = ReadWidgetBool(m_wPingGMInput, fallbackPingGM);
+		bool deleteOnCompletion = ReadWidgetBool(m_wDeleteOnCompletionInput, fallbackDelete);
 
 		// 7. Action Text
-		string actionText = ReadWidgetText(m_wActionTextInput, m_SpawnerComp.GetDefaultActionText());
+		string actionText = ReadWidgetText(m_wActionTextInput, fallbackActionText);
 
 		// 8. Action Sound Index
 		int soundIdx = 0;
@@ -514,20 +689,38 @@ class ATHENA_IntelSpawnerDialogUI : SCR_ConfigurableDialogUi
 		}
 
 		// 9. Action Duration
-		float duration = ReadWidgetFloat(m_wActionDurationInput, m_SpawnerComp.GetDefaultActionDuration());
+		float duration = ReadWidgetFloat(m_wActionDurationInput, fallbackDuration);
 
-		m_SpawnerComp.SpawnConfiguredIntel(
-			selectedPrefab,
-			title,
-			intelType,
-			description,
-			actionText,
-			shareType,
-			pingGM,
-			deleteOnCompletion,
-			soundIdx,
-			duration
-		);
+		if (m_EditIntelComp)
+		{
+			m_EditIntelComp.RequestUpdateIntel(
+				selectedPrefab,
+				title,
+				intelType,
+				description,
+				actionText,
+				shareType,
+				pingGM,
+				deleteOnCompletion,
+				soundIdx,
+				duration
+			);
+		}
+		else if (m_SpawnerComp)
+		{
+			m_SpawnerComp.SpawnConfiguredIntel(
+				selectedPrefab,
+				title,
+				intelType,
+				description,
+				actionText,
+				shareType,
+				pingGM,
+				deleteOnCompletion,
+				soundIdx,
+				duration
+			);
+		}
 	}
 
 	//------------------------------------------------------------------------------------------------

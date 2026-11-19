@@ -97,6 +97,59 @@ class ATHENA_PlayerIntelComponent : ScriptComponent
 		SCR_HintManagerComponent.GetInstance().ShowCustomHint(title, "Intel Shared by Nearby Player", 10.0, false);
 	}
 
+	//------------------------------------------------------------------------------------------------
+	// Relay GM "Edit Intel" updates from a client PlayerController to the server
+	void RequestUpdateIntelOnServer(
+		RplId intelId,
+		ResourceName newPrefab,
+		string title,
+		string intelType,
+		string description,
+		string actionText,
+		int packedFlags
+	)
+	{
+		Rpc(
+			RpcAsk_UpdateIntel,
+			intelId,
+			newPrefab,
+			title,
+			intelType,
+			description,
+			actionText,
+			packedFlags
+		);
+	}
+
+	//------------------------------------------------------------------------------------------------
+	[RplRpc(RplChannel.Reliable, RplRcver.Server)]
+	protected void RpcAsk_UpdateIntel(
+		RplId intelId,
+		ResourceName newPrefab,
+		string title,
+		string intelType,
+		string description,
+		string actionText,
+		int packedFlags
+	)
+	{
+		ATHENA_IntelComponent intelComp = ATHENA_IntelComponent.Cast(Replication.FindItem(intelId));
+		if (!intelComp)
+		{
+			Print("ATHENA_PlayerIntelComponent Server: Could not resolve Intel component for RplId " + intelId, LogLevel.WARNING);
+			return;
+		}
+
+		intelComp.ServerApplyPackedUpdate(
+			newPrefab,
+			title,
+			intelType,
+			description,
+			actionText,
+			packedFlags
+		);
+	}
+
 	string GetCurrentGameTimeFormatted()
 	{
 		ChimeraWorld world = ChimeraWorld.CastFrom(GetGame().GetWorld());
