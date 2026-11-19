@@ -5,7 +5,7 @@ GenericEntity : "{EE263052AA21FFC6}Prefabs/Intel/ATHENA_IntelSpawnerModule.et" {
    m_EntityType SYSTEM
    m_UIInfo SCR_EditableEntityUIInfo "{5298E609432D192D}" {
     Name "(ATHENA_IntelSpawnerModule)"
-    Icon "{FFB23B5FA643DE7F}UI/Textures/EditorPreviews/Auto/Test/E_TestEditableSource.edds"
+    Icon "{E0E7B854470821EB}UI/Textures/EditorPreviews/System/editorPreviewTemplate.edds"
     m_Image ""
     m_aAuthoredLabels {
     }

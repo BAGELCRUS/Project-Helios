@@ -1,0 +1,53 @@
+GenericEntity : "{6BE5346DC96E4C96}Prefabs/Props/Civilian/PaperHolder_01/PaperHolder_01_base.et" {
+ ID "619A80F7D6638777"
+ components {
+  MeshObject "{5872F0EB7FA40561}" {
+   Materials {
+    MaterialAssignClass "{6AE7608C802FA645}" {
+     SourceMaterial "PaperHolder_01"
+     AssignedMaterial "{DDA0AFC6FD7E3500}Assets/Props/Military/PaperHolder_01/Data/PaperHolder_01_V3.emat"
+    }
+   }
+  }
+  RigidBody "{5872F0EB7DFB5A9D}" {
+   ModelGeometry 1
+   Static 1
+  }
+  ActionsManagerComponent "{6AE8100400000001}" {
+   ActionContexts {
+    UserActionContext "{6AE8100400000002}" {
+     ContextName "default"
+     Position PointInfo "{6AE8100400000003}" {
+     }
+     Radius 0.6
+    }
+   }
+   additionalActions {
+    ATHENA_IntelWorldAction "{6AE8100400000004}" {
+     ParentContextList {
+      "default"
+     }
+     UIInfo UIInfo "{6AE8100400000005}" {
+      Name "Open Intel"
+     }
+     Duration 1
+    }
+   }
+  }
+  ATHENA_IntelComponent "{6AE8100400000006}" {
+   m_sIntelType "Document"
+   m_sActionText "Read Intel"
+  }
+  SCR_EditableEntityComponent "{6AE8100400000007}" {
+   m_EntityType GENERIC
+   m_UIInfo SCR_EditableEntityUIInfo "{6AE8100400000008}" {
+    Name "Intel Mission Briefing"
+    Icon "{8EE22446E2A8F05D}UI/Textures/Editor/Attributes/Categories/categories_support_station.edds"
+   }
+   m_Flags 71
+  }
+  RplComponent "{6AE8100400000009}" {
+   Streamable Disabled
+  }
+ }
+}
